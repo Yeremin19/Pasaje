@@ -14,13 +14,84 @@ datasource db {
 }
 
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String 
-  lastName  String
-  password  String
-  isAdmin   Boolean @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Usuario {
+  usuario_id  Int      @id @default(autoincrement())
+  nombre      String   @db.VarChar(50)
+  apellido    String   @db.VarChar(50)
+  dni         String   @unique @db.VarChar(20)
+  correo      String   @unique @db.VarChar(100)
+  telefono    String   @db.VarChar(9)
+  password    String   @db.VarChar(100)
+  rol         Rol      @default(cliente)
+  reservas    Reserva[]
+
+}
+
+model Bus {
+  bus_id     Int       @id @default(autoincrement())
+  placa      String    @unique @db.VarChar(10)
+  modelo     String?   @db.VarChar(50)
+  capacidad  Int
+  horarios   Horario[]
+  asientos   Asiento[]
+}
+
+model Ruta {
+  ruta_id     Int       @id @default(autoincrement())
+  origen      String    @db.VarChar(100)
+  destino     String    @db.VarChar(100)
+  distancia_km Decimal?
+  horarios    Horario[]
+}
+
+model Horario {
+  horario_id   Int       @id @default(autoincrement())
+  fecha        DateTime
+  hora_salida  DateTime
+  hora_llegada DateTime
+  precio       Decimal   @db.Decimal(8, 2)
+  ruta         Ruta      @relation(fields: [ruta_id], references: [ruta_id])
+  ruta_id      Int
+  bus          Bus       @relation(fields: [bus_id], references: [bus_id])
+  bus_id       Int
+  reservas     Reserva[]
+}
+
+model Asiento {
+  asiento_id      Int       @id @default(autoincrement())
+  numero_asiento  String    @db.VarChar(5)
+  tipo            TipoAsiento
+  bus             Bus       @relation(fields: [bus_id], references: [bus_id])
+  bus_id          Int
+  reservas        Reserva[]
+}
+
+model Reserva {
+  reserva_id   Int        @id @default(autoincrement())
+  estado       Estado     @default(pendiente)
+  fecha_reserva DateTime
+  monto_total  Decimal    @db.Decimal(8, 2)
+  usuario      Usuario    @relation(fields: [usuario_id], references: [usuario_id])
+  usuario_id   Int
+  horario      Horario    @relation(fields: [horario_id], references: [horario_id])
+  horario_id   Int
+  asiento      Asiento    @relation(fields: [asiento_id], references: [asiento_id])
+  asiento_id   Int
+}
+
+
+enum Rol {
+  admin
+  cliente
+}
+
+enum Estado {
+  pendiente
+  pagado
+  cancelado
+}
+
+enum TipoAsiento {
+  ventana
+  pasillo
 }
