@@ -4,15 +4,24 @@ import {
 	Bus,
 	BusCreate,
 	BusUpdate,
+	Horario,
+	HorarioCreate,
+	HorarioUpdate,
 	Ruta,
 	RutaCreate,
 	RutaUpdate,
+	Usuario,
+	UsuarioCreate,
+	UsuarioUpdate,
 } from '@/interface/typesfront'
+
 import { createContext, useState } from 'react'
 
 export const PasajesContext = createContext<{
 	buses: Bus[]
 	rutas: Ruta[]
+	usuarios: Usuario[]
+	horarios: Horario[]
 
 	totalBuses: () => Promise<void>
 	crearBuses: (bus: BusCreate) => Promise<void>
@@ -23,9 +32,21 @@ export const PasajesContext = createContext<{
 	crearRutas: (ruta: RutaCreate) => Promise<void>
 	updateRuta: (ruta: RutaUpdate, id: string) => Promise<void>
 	deleteRuta: (id: number) => Promise<void>
+
+	totalUsuarios: () => Promise<void>
+	createUsuario: (usuario: UsuarioCreate) => Promise<void>
+	updateUsuario: (usuario: UsuarioUpdate, id: string) => Promise<void>
+	deleteUsuario: (id: number) => Promise<void>
+
+	totalHorarios: () => Promise<void>
+	createHorario: (horario: HorarioCreate) => Promise<void>
+	updateHorario: (horario: HorarioUpdate, id: number) => Promise<void>
+	deleteHorario: (id: number) => Promise<void>
 }>({
 	buses: [],
 	rutas: [],
+	usuarios: [],
+	horarios: [],
 
 	totalBuses: async () => {},
 	crearBuses: async () => {},
@@ -36,6 +57,15 @@ export const PasajesContext = createContext<{
 	crearRutas: async () => {},
 	updateRuta: async () => {},
 	deleteRuta: async () => {},
+
+	totalUsuarios: async () => {},
+	createUsuario: async () => {},
+	updateUsuario: async () => {},
+	deleteUsuario: async () => {},
+	totalHorarios: async () => {},
+	createHorario: async () => {},
+	updateHorario: async () => {},
+	deleteHorario: async () => {},
 })
 
 export const PasajesProvider = ({
@@ -46,6 +76,10 @@ export const PasajesProvider = ({
 	const [buses, setBuses] = useState<Bus[]>([])
 
 	const [rutas, setRutas] = useState<Ruta[]>([])
+
+	const [usuarios, setUsuarios] = useState<Usuario[]>([])
+
+	const [horarios, setHorarios] = useState<Horario[]>([])
 
 	async function totalBuses() {
 		try {
@@ -236,11 +270,216 @@ export const PasajesProvider = ({
 		}
 	}
 
+	async function totalUsuarios() {
+		try {
+			const response = await fetch('http://localhost:3000/api/user')
+			const data = await response.json()
+			console.log(data)
+			setUsuarios(data)
+		} catch (error) {
+			throw new Error('Error en la función totalUsuarios' + error)
+		}
+	}
+
+	async function createUsuario(usuario: UsuarioCreate) {
+		try {
+			const response = await fetch('http://localhost:3000/api/user', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					dni: usuario.dni,
+					name: usuario.name,
+					apellido: usuario.apellido,
+					correo: usuario.correo,
+					password: usuario.password,
+					telefono: usuario.telefono,
+				}),
+			})
+
+			if (!response.ok) {
+				throw new Error(`Server responded with status: ${response.status}`)
+			}
+
+			const contentType = response.headers.get('content-type')
+			if (contentType && contentType.includes('application/json')) {
+				const data = await response.json()
+				console.log('Data received:', data)
+				setUsuarios([...usuarios, data])
+			} else {
+				const text = await response.text()
+				console.error('Unexpected response format:', text)
+				throw new Error('Response is not JSON: ' + text)
+			}
+		} catch (error) {
+			console.error('Error in createUsuario function:', error)
+			throw new Error('Error en la función createUsuario: ' + error)
+		}
+	}
+
+	async function updateUsuario(usuario: UsuarioUpdate, id: string) {
+		try {
+			const response = await fetch(`http://localhost:3000/api/user/${id}`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					name: usuario.name,
+					apellido: usuario.apellido,
+					correo: usuario.correo,
+					password: usuario.password,
+					dni: usuario.dni,
+					telefono: usuario.telefono,
+					rol: usuario.rol,
+				}),
+			})
+			if (!response.ok) {
+				throw new Error(`Server responded with status: ${response.status}`)
+			}
+
+			const contentType = response.headers.get('content-type')
+
+			if (contentType && contentType.includes('application/json')) {
+				const data = await response.json()
+				console.log('Data received:', data)
+				setUsuarios([...usuarios, data])
+			} else {
+				const text = await response.text()
+				console.error('Unexpected response format:', text)
+				throw new Error('Response is not JSON: ' + text)
+			}
+		} catch (error) {
+			console.error('Error en la función updateUsuario' + error)
+			throw new Error('Error en la función updateUsuario' + error)
+		}
+	}
+
+	async function deleteUsuario(id: number) {
+		try {
+			const response = await fetch(`http://localhost:3000/api/user/${id}`, {
+				method: 'DELETE',
+			})
+			if (!response.ok) {
+				throw new Error(`Server responded with status: ${response.status}`)
+			}
+
+			return totalUsuarios()
+		} catch (error) {
+			console.error('Error en la función deleteUsuario' + error)
+			throw new Error('Error en la función deleteUsuario' + error)
+		}
+	}
+
+	async function totalHorarios() {
+		try {
+			const response = await fetch('http://localhost:3000/api/schedule')
+			const data = await response.json()
+			console.log(data)
+			setHorarios(data)
+		} catch (error) {
+			throw new Error('Error en la función totalHorarios' + error)
+		}
+	}
+
+	async function createHorario(horario: HorarioCreate) {
+		try {
+			const response = await fetch('http://localhost:3000/api/schedule', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					fecha: horario.fecha,
+					hora_salida: horario.hora_salida,
+					hora_llegada: horario.hora_llegada,
+					precio: horario.precio,
+					ruta_id: horario.ruta_id,
+					bus_id: horario.bus_id,
+				}),
+			})
+
+			if (!response.ok) {
+				throw new Error(`Server responded with status: ${response.status}`)
+			}
+
+			const contentType = response.headers.get('content-type')
+			if (contentType && contentType.includes('application/json')) {
+				const data = await response.json()
+				console.log('Data received:', data)
+				setHorarios([...horarios, data])
+			} else {
+				const text = await response.text()
+				console.error('Unexpected response format:', text)
+				throw new Error('Response is not JSON: ' + text)
+			}
+		} catch (error) {
+			console.error('Error in createHorario function:', error)
+			throw new Error('Error en la función createHorario: ' + error)
+		}
+	}
+
+	async function updateHorario(horario: HorarioUpdate, id: number) {
+		try {
+			const response = await fetch(`http://localhost:3000/api/schedule/${id}`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					fecha: horario.fecha,
+					hora_salida: horario.hora_salida,
+					hora_llegada: horario.hora_llegada,
+					precio: horario.precio,
+					ruta_id: horario.ruta_id,
+					bus_id: horario.bus_id,
+				}),
+			})
+			if (!response.ok) {
+				throw new Error(`Server responded with status: ${response.status}`)
+			}
+
+			const contentType = response.headers.get('content-type')
+
+			if (contentType && contentType.includes('application/json')) {
+				const data = await response.json()
+				console.log('Data received:', data)
+				setHorarios([...horarios, data])
+			} else {
+				const text = await response.text()
+				console.error('Unexpected response format:', text)
+				throw new Error('Response is not JSON: ' + text)
+			}
+		} catch (error) {
+			console.error('Error en la función updateHorario' + error)
+			throw new Error('Error en la función updateHorario' + error)
+		}
+	}
+
+	async function deleteHorario(id: number) {
+		try {
+			const response = await fetch(`http://localhost:3000/api/schedule/${id}`, {
+				method: 'DELETE',
+			})
+
+			if (!response.ok) {
+				throw new Error(`Server responded with status: ${response.status}`)
+			}
+			return totalHorarios()
+		} catch (error) {
+			console.error('Error en la funcion deleteHorario ' + error)
+			throw new Error('Error en la funcion delete Horario' + error)
+		}
+	}
+
 	return (
 		<PasajesContext.Provider
 			value={{
 				buses,
 				rutas,
+				usuarios,
+				horarios,
 				totalBuses,
 				crearBuses,
 				updateBus,
@@ -249,6 +488,14 @@ export const PasajesProvider = ({
 				crearRutas,
 				updateRuta,
 				deleteRuta,
+				totalUsuarios,
+				createUsuario,
+				updateUsuario,
+				deleteUsuario,
+				totalHorarios,
+				createHorario,
+				updateHorario,
+				deleteHorario,
 			}}
 		>
 			{children}

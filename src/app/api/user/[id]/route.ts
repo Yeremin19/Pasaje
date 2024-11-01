@@ -57,7 +57,7 @@ export async function PUT(req: Request, { params }: { params: Params }) {
 		}
 
 		const updatedUsuario = await prisma.usuario.update({
-			where: { usuario_id: Number(id) },
+			where: { dni: id.toString() },
 			data: {
 				nombre: name,
 				apellido: apellido,

@@ -12,6 +12,10 @@ export async function GET(req: Request, { params }: { params: Params }) {
 			where: {
 				fecha: new Date(id.toString()),
 			},
+			include: {
+				bus: true,
+				ruta: true,
+			},
 		})
 		if (!finHorarios) {
 			throw new Error('No hay horarios')
@@ -26,8 +30,14 @@ export async function GET(req: Request, { params }: { params: Params }) {
 export async function PUT(req: Request, { params }: { params: Params }) {
 	try {
 		const { id } = await params
-		const { fecha, hora_salida, hora_llegada, precio }: Horario =
-			await req.json()
+		const {
+			fecha,
+			hora_salida,
+			hora_llegada,
+			precio,
+			bus_id,
+			ruta_id,
+		}: Horario = await req.json()
 
 		if (!fecha || !hora_salida || !hora_llegada || !precio) {
 			throw new Error('Missing required fields')
@@ -40,6 +50,8 @@ export async function PUT(req: Request, { params }: { params: Params }) {
 				hora_salida: hora_salida,
 				hora_llegada: hora_llegada,
 				precio: precio,
+				bus_id: bus_id,
+				ruta_id: ruta_id,
 			},
 		})
 

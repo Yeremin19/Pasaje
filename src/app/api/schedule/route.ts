@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/libs/prisma'
 import { Horario } from '@/interface/types'
+
 export async function GET() {
 	try {
-		const horarios = await prisma.horario.findMany()
+		const horarios = await prisma.horario.findMany({
+			include: {
+				bus: true,
+				ruta: true,
+			},
+		})
 		if (!horarios) {
 			throw new Error('No hay horarios')
 		}
