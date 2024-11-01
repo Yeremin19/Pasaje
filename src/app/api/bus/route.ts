@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 	try {
 		const { placa, modelo, capacidad }: Bus = await req.json()
 
-		if (!placa || !capacidad) {
+		if (!placa || !capacidad || !modelo) {
 			throw new Error('Missing required fields')
 		}
 

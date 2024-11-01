@@ -11,7 +11,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
 
 		// Realiza la consulta utilizando el campo `placa` con el valor de `id`
 		const findBus = await prisma.bus.findFirst({
-			where: { placa: id.toString() },
+			where: { bus_id: Number(id) },
 		})
 
 		if (!findBus) {
@@ -41,13 +41,14 @@ export async function PUT(request: Request, { params }: { params: Params }) {
 		}
 
 		const updateBus = await prisma.bus.update({
-			where: { placa: id.toString() },
+			where: { bus_id: Number(id) },
 			data: {
 				placa,
 				capacidad,
 				modelo,
 			},
 		})
+		console.log(updateBus)
 
 		return NextResponse.json(updateBus)
 	} catch (error) {
