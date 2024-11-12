@@ -26,7 +26,7 @@ export async function POST(req: Request) {
 			fecha,
 			hora_salida,
 			hora_llegada,
-			precio,
+			
 			ruta_id,
 			bus_id,
 		}: Horario = await req.json()
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
 			!fecha ||
 			!hora_salida ||
 			!hora_llegada ||
-			!precio ||
+			
 			!ruta_id ||
 			!bus_id
 		) {
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
 				fecha: fecha,
 				hora_salida: hora_salida,
 				hora_llegada: hora_llegada,
-				precio: precio,
+				
 				ruta_id: ruta_id,
 				bus_id: bus_id,
 			},

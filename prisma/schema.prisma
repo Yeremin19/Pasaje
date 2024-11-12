@@ -49,7 +49,7 @@ model Horario {
   fecha        DateTime
   hora_salida  DateTime
   hora_llegada DateTime
-  precio       Decimal   @db.Decimal(8, 2)
+ 
   ruta         Ruta      @relation(fields: [ruta_id], references: [ruta_id])
   ruta_id      Int
   bus          Bus       @relation(fields: [bus_id], references: [bus_id])
@@ -70,7 +70,6 @@ model Reserva {
   reserva_id   Int        @id @default(autoincrement())
   estado       Estado     @default(pendiente)
   fecha_reserva DateTime
-  monto_total  Decimal    @db.Decimal(8, 2)
   usuario      Usuario    @relation(fields: [usuario_id], references: [usuario_id])
   usuario_id   Int
   horario      Horario    @relation(fields: [horario_id], references: [horario_id])

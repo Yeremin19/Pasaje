@@ -1,12 +1,15 @@
 'use client'
 
 import {
+	Asiento,
 	Bus,
 	BusCreate,
 	BusUpdate,
+	createReserva,
 	Horario,
 	HorarioCreate,
 	HorarioUpdate,
+	Reserva,
 	Ruta,
 	RutaCreate,
 	RutaUpdate,
@@ -22,6 +25,8 @@ export const PasajesContext = createContext<{
 	rutas: Ruta[]
 	usuarios: Usuario[]
 	horarios: Horario[]
+	reservas: Reserva[]
+	asientos: Asiento[]
 
 	totalBuses: () => Promise<void>
 	crearBuses: (bus: BusCreate) => Promise<void>
@@ -42,11 +47,21 @@ export const PasajesContext = createContext<{
 	createHorario: (horario: HorarioCreate) => Promise<void>
 	updateHorario: (horario: HorarioUpdate, id: number) => Promise<void>
 	deleteHorario: (id: number) => Promise<void>
+
+	totalReservas: () => Promise<void>
+	createReserva: (reserva: createReserva) => Promise<void>
+
+	createAsiento: (asiento: Asiento) => Promise<void>
+	totalAsientos: () => Promise<void>
+	deleteAsiento: (id: number) => Promise<void>
+	updateAsiento: (asiento: Asiento, id: number) => Promise<void>
 }>({
 	buses: [],
 	rutas: [],
 	usuarios: [],
 	horarios: [],
+	reservas: [],
+	asientos: [],
 
 	totalBuses: async () => {},
 	crearBuses: async () => {},
@@ -66,6 +81,16 @@ export const PasajesContext = createContext<{
 	createHorario: async () => {},
 	updateHorario: async () => {},
 	deleteHorario: async () => {},
+
+	totalReservas: async () => {},
+	createReserva: async () => {},
+
+	createAsiento: async () => {},
+	totalAsientos: async () => {},
+	deleteAsiento: async () => {},
+	updateAsiento: async () => {},
+
+	
 })
 
 export const PasajesProvider = ({
@@ -80,6 +105,12 @@ export const PasajesProvider = ({
 	const [usuarios, setUsuarios] = useState<Usuario[]>([])
 
 	const [horarios, setHorarios] = useState<Horario[]>([])
+
+	const [reservas, setReservas] = useState<Reserva[]>([])
+
+	const [asientos, setAsientos] = useState<Asiento[]>([])
+
+
 
 	async function totalBuses() {
 		try {
@@ -394,7 +425,7 @@ export const PasajesProvider = ({
 					fecha: horario.fecha,
 					hora_salida: horario.hora_salida,
 					hora_llegada: horario.hora_llegada,
-					precio: horario.precio,
+					// precio: horario.precio,
 					ruta_id: horario.ruta_id,
 					bus_id: horario.bus_id,
 				}),
@@ -415,7 +446,7 @@ export const PasajesProvider = ({
 				throw new Error('Response is not JSON: ' + text)
 			}
 		} catch (error) {
-			console.error('Error in createHorario function:', error)
+			
 			throw new Error('Error en la función createHorario: ' + error)
 		}
 	}
@@ -473,6 +504,155 @@ export const PasajesProvider = ({
 		}
 	}
 
+	async function totalReservas() {
+		try {
+			const response = await fetch('http://localhost:3000/api/reserve')
+			const data = await response.json()
+			console.log(data)
+			setReservas(data)
+		} catch (error) {
+			throw new Error('Error en la función totalReservas' + error
+			)
+		}
+	}
+	
+	async function createReserva(reserva: createReserva) {
+		try {
+			const response = await fetch('http://localhost:3000/api/reserve', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					estado: reserva.estado,
+					fecha_reserva: reserva.fecha_reserva,
+					usuario_id: reserva.usuario_id,
+					horario_id: reserva.horario_id,
+					asiento_id: reserva.asiento_id,
+				}),
+			})
+
+			if (!response.ok) {
+				throw new Error(`Server responded with status: ${response.status}`)
+			}
+
+			const contentType = response.headers.get('content-type')
+			if (contentType && contentType.includes('application/json')) {
+				const data = await response.json()
+				console.log('Data received:', data)
+				setReservas([...reservas, data])
+			} else {
+				const text = await response.text()
+				console.error('Unexpected response format:', text)
+				throw new Error('Response is not JSON: ' + text)
+			}
+		} catch (error) {
+			console.error('Error in createReserva function:', error)
+			throw new Error('Error en la función createReserva: ' + error)
+		}
+	}
+
+
+	//Acá se crea el asiento
+	async function createAsiento(asiento: Asiento) {
+		try {
+			const response = await fetch('http://localhost:3000/api/seating', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					numero_asiento: asiento.numero_asiento,
+					tipo: asiento.tipo,
+					bus_id: asiento.bus_id,
+				}),
+			})
+	
+			if (!response.ok) {
+				throw new Error(`Server responded with status: ${response.status}`)
+			}
+
+			const contentType = response.headers.get('content-type')
+			if (contentType && contentType.includes('application/json')) {
+				const data = await response.json()
+				console.log('Data received:', data)
+				setAsientos([...asientos, data])
+			} else {
+				const text = await response.text()
+				console.error('Unexpected response format:', text)
+				throw new Error('Response is not JSON: ' + text)
+			}
+
+		} catch (error) {
+			throw new Error('Error en la función createAsiento' + error)
+		}
+		
+
+
+	}
+
+	async function totalAsientos() {
+		try {
+			const response = await fetch('http://localhost:3000/api/seating')
+			const data = await response.json()
+			console.log(data)
+			setAsientos(data)
+		} catch (error) {
+			throw new Error('Error en la función totalAsientos' + error)
+		}	
+	}
+
+	async function deleteAsiento(id: number) {
+
+		try {
+			const response = await fetch(`http://localhost:3000/api/seating/${id}`, {
+				method: 'DELETE',
+			})
+
+			if (!response.ok) {
+				throw new Error(`Server responded with status: ${response.status}`)
+			}
+			return totalAsientos()
+		} catch (error) {
+			console.error('Error en la funcion deleteAsiento ' + error)
+			throw new Error('Error en la funcion delete Asiento' + error)
+		}
+	}
+
+	async function updateAsiento(asiento: Asiento, id: number) {
+		try {
+			const response = await fetch(`http://localhost:3000/api/seating/${id}`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					numero_asiento: asiento.numero_asiento,
+					tipo: asiento.tipo,
+					bus_id: asiento.bus_id,
+				}),
+			})
+			if (!response.ok) {
+				throw new Error(`Server responded with status: ${response.status}`)
+			}
+
+			const contentType = response.headers.get('content-type')
+
+			if (contentType && contentType.includes('application/json')) {
+				const data = await response.json()
+				console.log('Data received:', data)
+				setAsientos([...asientos, data])
+			} else {
+				const text = await response.text()
+				console.error('Unexpected response format:', text)
+				throw new Error('Response is not JSON: ' + text)
+			}
+		} catch (error) {
+			console.error('Error en la función updateAsiento' + error)
+			throw new Error('Error en la función updateAsiento' + error)
+		}
+	}
+
 	return (
 		<PasajesContext.Provider
 			value={{
@@ -480,6 +660,8 @@ export const PasajesProvider = ({
 				rutas,
 				usuarios,
 				horarios,
+				reservas,
+				asientos,
 				totalBuses,
 				crearBuses,
 				updateBus,
@@ -496,6 +678,12 @@ export const PasajesProvider = ({
 				createHorario,
 				updateHorario,
 				deleteHorario,
+				totalReservas,
+				createReserva,
+				createAsiento,
+				totalAsientos,
+				deleteAsiento,
+				updateAsiento,
 			}}
 		>
 			{children}

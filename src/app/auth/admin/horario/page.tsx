@@ -1,7 +1,7 @@
-'use client'
-import React, { useContext, useEffect, useState } from 'react'
-import { PasajesContext } from '@/context/PasajesContext'
-import Time from '@/components/tiempo'
+"use client";
+import React, { useContext, useEffect, useState } from 'react';
+import { PasajesContext } from '@/context/PasajesContext';
+import Time from '@/components/tiempo';
 
 function HorarioPage() {
 	const {
@@ -13,64 +13,132 @@ function HorarioPage() {
 		totalRutas,
 		createHorario,
 		deleteHorario,
-	} = useContext(PasajesContext)
+	} = useContext(PasajesContext);
 
-	const [fecha, setFecha] = useState<string>('')
-	const [horaSalida, setHoraSalida] = useState<string>('')
-	const [horaLlegada, setHoraLlegada] = useState<string>('')
-	const [precio, setPrecio] = useState<string>('')
-	const [busId, setBusId] = useState<number>(0)
-	const [rutaId, setRutaId] = useState<number>(0)
+	const [fecha, setFecha] = useState('');
+	const [horaSalida, setHoraSalida] = useState('');
+	const [horaLlegada, setHoraLlegada] = useState('');
+	const [precio, setPrecio] = useState('');
+	const [busId, setBusId] = useState(0);
+	const [rutaId, setRutaId] = useState(0);
+	const [isConfigOpen, setIsConfigOpen] = useState(false);
 
 	useEffect(() => {
-		totalHorarios()
-		totalBuses()
-		totalRutas()
-	}, [])
+		totalHorarios();
+		totalBuses();
+		totalRutas();
+	}, []);
 
 	const handlecreateHorario = async (e: React.FormEvent) => {
-		e.preventDefault()
+		e.preventDefault();
 		try {
 			const horario = await createHorario({
 				fecha: new Date(fecha),
 				hora_salida: new Date(`${fecha}T${horaSalida}`),
 				hora_llegada: new Date(`${fecha}T${horaLlegada}`),
-				precio: Number(precio),
+				// precio: Number(precio),
 				bus_id: busId,
 				ruta_id: rutaId,
-			})
-			setFecha('')
-			setHoraSalida('')
-			setHoraLlegada('')
-			setPrecio('')
-			setBusId(0)
-			setRutaId(0)
-			totalHorarios()
-			console.log('Horario creado: ', horario)
+			});
+			setFecha('');
+			setHoraSalida('');
+			setHoraLlegada('');
+			// setPrecio('');
+			setBusId(0);
+			setRutaId(0);
+			totalHorarios();
+			console.log('Horario creado: ', horario);
 		} catch (error) {
-			console.log('Error al crear un horario: ', error)
+			console.log('Error al crear un horario: ', error);
 		}
-	}
+	};
 
-	const handledeleteHorario = async (id: number) => {
+	const handledeleteHorario = async (id:number) => {
 		try {
-			await deleteHorario(id)
+			await deleteHorario(id);
 		} catch (error) {
-			console.error('Error en handleDeleteBus', error)
+			console.error('Error en handleDeleteBus', error);
 		}
-	}
+	};
 
 	return (
-		<div className='container mx-auto py-10'>
-			<div className='flex flex-col'>
-				<h1 className='text-xl font-bold mb-4'>Crear Horario de Salida</h1>
+		<div className='flex min-h-screen'>
+            {/* Sidebar */}
+			<aside className="w-64 bg-green-600 text-white flex flex-col p-5 h-screen">
+                <div className="flex flex-col items-center mb-8">
+                    <div className="w-16 h-16 bg-gray-300 rounded-full mb-4 overflow-hidden">
+                        <img
+                            src="/Imagen1.jpg"
+                            alt="Profile"
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                    <h2 className="text-lg font-bold">EL RAPIDO</h2>
+                </div>
+                <nav className="space-y-4">
+                    <a href="/" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
+                        <span>🏠</span>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="/auth/admin/bus" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
+                        <span>🚌</span>
+                        <span>Buses</span>
+                    </a>
+                    <a href="/auth/admin/pasajes" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
+                        <span>🎫</span>
+                        <span>Pasajes</span>
+                    </a>
+                    <a href="/auth/admin/ventas" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
+                        <span>💼</span>
+                        <span>Ventas</span>
+                    </a>
+                    <a href="/auth/admin/reporte" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
+                        <span>📝</span>
+                        <span>Reportes</span>
+                    </a>
+                    <div>
+                        <div className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded cursor-pointer" onClick={() => setIsConfigOpen(!isConfigOpen)}>
+                            <span>⚙️</span>
+                            <span>Configuraciónㅤㅤㅤ✛</span>
+                        </div>
+                        {isConfigOpen && (
+                            <div className="ml-6 mt-2 space-y-2">
+                                <a href="/auth/admin/informacion" className="block text-teal-300 hover:underline">Información de la Empresa</a>
+                            </div>
+                        )}
+                    </div>
+                </nav>
+                <button className="mt-auto bg-red-600 hover:bg-red-700 p-2 rounded justify-center">
+                    Cerrar sesión
+                </button>
+            </aside>
+
+            <div className='flex-1'>
+                {/* Encabezado flexible */}
+                <div className="bg-cyan-800 text-white p-4 shadow-md sticky top-0 z-10 w-full">
+                    <h1 className="text-3xl font-bold">Sistema de Venta de Pasajes</h1>
+                </div>
+                <div className='p-4 container mx-auto'>
+                    <h2 className='text-2xl font-bold mb-4'>Administración de Buses</h2>
+                    <div className='flex space-x-4 mb-4'>
+                        <button className='bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded'>
+                            <a href={`/auth/admin/bus/`}>Registro de Buses</a>
+                        </button>                                             
+                        <button className='bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded'>
+                            <a href={`/auth/admin/ruta/`}>Ruta de Buses</a>
+                        </button>                                             
+                        <button className='bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded'>
+                            <a href={`/auth/admin/horario/`}>Horario de Buses</a>
+                        </button>
+                    </div>
+                    <h1 className='text-2xl font-bold mb-4'>Horario de Salida</h1>
 				<form
 					onSubmit={handlecreateHorario}
 					className='flex flex-col gap-4 text-black'
 				>
 					<div className='flex gap-4'>
 						<div className='flex flex-col'>
-							<label className='mb-2 font-medium text-white'>Fecha</label>
+							<label className='mb-2 font-medium text-black'>Fecha</label>
 							<input
 								value={fecha}
 								onChange={e => setFecha(e.target.value)}
@@ -79,7 +147,7 @@ function HorarioPage() {
 							/>
 						</div>
 						<div className='flex flex-col'>
-							<label className='mb-2 font-medium text-white'>Hora Salida</label>
+							<label className='mb-2 font-medium text-black'>Hora Salida</label>
 							<input
 								value={horaSalida}
 								onChange={e => setHoraSalida(e.target.value)}
@@ -88,7 +156,7 @@ function HorarioPage() {
 							/>
 						</div>
 						<div className='flex flex-col'>
-							<label className='mb-2 font-medium text-white'>
+							<label className='mb-2 font-medium text-black'>
 								Hora Llegada
 							</label>
 							<input
@@ -98,19 +166,11 @@ function HorarioPage() {
 								className='border border-gray-300 p-2 rounded'
 							/>
 						</div>
-						<div>
-							<label className='mb-2 font-medium text-white'>Precio</label>
-							<input
-								value={precio}
-								onChange={e => setPrecio(e.target.value)}
-								type='text'
-								className='border border-gray-300 p-2 rounded'
-							/>
-						</div>
+
 					</div>
 					<div className='flex gap-4'>
 						<div className='flex flex-col'>
-							<label className='mb-2 font-medium text-white'>Bus</label>
+							<label className='mb-2 font-medium text-black'>Bus</label>
 							<select
 								value={busId}
 								onChange={e => setBusId(Number(e.target.value))}
@@ -128,7 +188,7 @@ function HorarioPage() {
 							</select>
 						</div>
 						<div className='flex flex-col'>
-							<label className='mb-2 font-medium text-white'>Ruta</label>
+							<label className='mb-2 font-medium text-black'>Ruta</label>
 							<select
 								value={rutaId}
 								onChange={e => setRutaId(Number(e.target.value))}
@@ -166,7 +226,6 @@ function HorarioPage() {
 							<th className='py-2 px-4 border-b'>Fecha</th>
 							<th className='py-2 px-4 border-b'>Hora Salida</th>
 							<th className='py-2 px-4 border-b'>Hora Llegada</th>
-							<th className='py-2 px-4 border-b'>Precio</th>
 							<th className='py-2 px-4 border-b'>ID Bus</th>
 							<th className='py-2 px-4 border-b'>Modelo</th>
 							<th className='py-2 px-4 border-b'>Placa</th>
@@ -203,16 +262,16 @@ function HorarioPage() {
 									{horario.ruta?.distancia_km}
 								</td>
 								<td className='py-0 px-4 border-b justify-between'>
-									<button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2'>
+									<button className='bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded mr-2'>
 										<a href={`/auth/admin/horario/${horario.fecha}`}>✍️</a>
 									</button>
 									<button
 										onClick={() => {
 											handledeleteHorario(horario.horario_id)
 										}}
-										className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'
+										className='bg-red-500 hover:bg-red-700 text-black font-bold py-2 px-4 rounded'
 									>
-										❌
+										X
 									</button>
 								</td>
 							</tr>
@@ -221,6 +280,8 @@ function HorarioPage() {
 				</table>
 			</div>
 		</div>
+	</div>
+
 	)
 }
 

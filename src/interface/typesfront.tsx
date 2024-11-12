@@ -82,7 +82,7 @@ export interface HorarioCreate {
 	fecha: Date
 	hora_salida: Date
 	hora_llegada: Date
-	precio: number
+	
 	ruta_id: number
 	bus_id: number
 }
@@ -95,8 +95,40 @@ export interface HorarioUpdate {
 	ruta_id: number
 	bus_id: number
 }
+export interface Reserva {
+	estado: EstadoReserva
+	fecha_reserva: Date
+	
+	usuario_id: number
+	horario_id: number
+	asiento_id: number
+}
 
+
+export interface createReserva{
+	estado: EstadoReserva
+	fecha_reserva: Date
+	usuario_id: number
+	horario_id: number
+	asiento_id: number
+}
+
+export interface Asiento {
+	numero_asiento: string
+	tipo: TipoAsiento
+	bus_id: number // ID del Bus relacionado
+}
 export enum Rol {
 	ADMIN = 'admin',
 	CLIENTE = 'cliente',
+}
+
+export enum EstadoReserva {
+	PENDIENTE = 'pendiente',
+	PAGADO = 'pagado',
+	CANCELADO = 'cancelado',
+}
+export enum TipoAsiento {
+	VENTANA = 'ventana',
+	PASILLO = 'pasillo',
 }

@@ -19,7 +19,7 @@ function UsuarioEditPage() {
 
 	useEffect(() => {
 		if (id) {
-			fetch(`http://localhost:3000/api/schedule/${id}`)
+			fetch(`http://localhost:3000/api/user/${id}`)
 				.then(res => res.json())
 				.then(data => {
 					setDni(data.dni)
