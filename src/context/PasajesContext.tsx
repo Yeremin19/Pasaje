@@ -2,6 +2,7 @@
 
 import {
 	Asiento,
+	AsientoT,
 	Bus,
 	BusCreate,
 	BusUpdate,
@@ -13,6 +14,7 @@ import {
 	Ruta,
 	RutaCreate,
 	RutaUpdate,
+	totalReservas,
 	Usuario,
 	UsuarioCreate,
 	UsuarioUpdate,
@@ -26,7 +28,8 @@ export const PasajesContext = createContext<{
 	usuarios: Usuario[]
 	horarios: Horario[]
 	reservas: Reserva[]
-	asientos: Asiento[]
+	asientos: AsientoT[]
+	uniqueReserve: totalReservas[]
 
 	totalBuses: () => Promise<void>
 	crearBuses: (bus: BusCreate) => Promise<void>
@@ -55,6 +58,8 @@ export const PasajesContext = createContext<{
 	totalAsientos: () => Promise<void>
 	deleteAsiento: (id: number) => Promise<void>
 	updateAsiento: (asiento: Asiento, id: number) => Promise<void>
+
+	firstReserva: () => Promise<void>
 }>({
 	buses: [],
 	rutas: [],
@@ -62,6 +67,7 @@ export const PasajesContext = createContext<{
 	horarios: [],
 	reservas: [],
 	asientos: [],
+	uniqueReserve: [],
 
 	totalBuses: async () => {},
 	crearBuses: async () => {},
@@ -89,6 +95,8 @@ export const PasajesContext = createContext<{
 	totalAsientos: async () => {},
 	deleteAsiento: async () => {},
 	updateAsiento: async () => {},
+	firstReserva: async () => {},
+
 
 	
 })
@@ -108,7 +116,9 @@ export const PasajesProvider = ({
 
 	const [reservas, setReservas] = useState<Reserva[]>([])
 
-	const [asientos, setAsientos] = useState<Asiento[]>([])
+	const [asientos, setAsientos] = useState<AsientoT[]>([])
+
+	const [uniqueReserve, setUniqueReserve] = useState<totalReservas[]>([])
 
 
 
@@ -497,6 +507,7 @@ export const PasajesProvider = ({
 			if (!response.ok) {
 				throw new Error(`Server responded with status: ${response.status}`)
 			}
+			
 			return totalHorarios()
 		} catch (error) {
 			console.error('Error en la funcion deleteHorario ' + error)
@@ -525,6 +536,7 @@ export const PasajesProvider = ({
 				},
 				body: JSON.stringify({
 					estado: reserva.estado,
+					precio: reserva.precio,
 					fecha_reserva: reserva.fecha_reserva,
 					usuario_id: reserva.usuario_id,
 					horario_id: reserva.horario_id,
@@ -653,6 +665,17 @@ export const PasajesProvider = ({
 		}
 	}
 
+	async function firstReserva() {
+		try {
+			const response = await fetch('http://localhost:3000/api/reserve/total')
+			const data = await response.json()
+			console.log(data)
+			setUniqueReserve(data)
+		} catch (error) {
+			throw new Error('Error en la función firstReserva' + error)
+		}
+	}
+
 	return (
 		<PasajesContext.Provider
 			value={{
@@ -662,6 +685,8 @@ export const PasajesProvider = ({
 				horarios,
 				reservas,
 				asientos,
+				uniqueReserve,
+				firstReserva,
 				totalBuses,
 				crearBuses,
 				updateBus,
@@ -684,6 +709,7 @@ export const PasajesProvider = ({
 				totalAsientos,
 				deleteAsiento,
 				updateAsiento,
+				
 			}}
 		>
 			{children}

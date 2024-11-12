@@ -26,7 +26,7 @@ export async function POST(req: Request) {
 		const {
 			estado,
 			fecha_reserva,
-			
+			precio,
 			usuario_id,
 			horario_id,
 			asiento_id,
@@ -34,7 +34,7 @@ export async function POST(req: Request) {
 		if (
 			!estado ||
 			!fecha_reserva ||
-			
+			!precio ||
 			!usuario_id ||
 			!horario_id ||
 			!asiento_id
@@ -45,6 +45,7 @@ export async function POST(req: Request) {
 			data: {
 				estado: estado,
 				fecha_reserva: fecha_reserva,
+				precio: precio,
 				usuario_id: usuario_id,
 				horario_id: horario_id,
 				asiento_id: asiento_id,

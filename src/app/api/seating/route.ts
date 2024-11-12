@@ -4,7 +4,13 @@ import { NextResponse } from 'next/server'
 
 export async function GET() {
 	try {
-		const asientos = await prisma.asiento.findMany()
+		const asientos = await prisma.asiento.findMany(
+			{
+				include: {
+					bus: true,
+				},
+			},
+		)
 		if (!asientos) {
 			throw new Error('No hay asientos')
 		}

@@ -1,29 +1,41 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import * as XLSX from 'xlsx';
-import Receipt from '../boleta/page'; // Importación del componente de la boleta
+import { PasajesContext } from '@/context/PasajesContext';
+import Receipt from '../boleta/page';
 
 const App = () => {
     const [isConfigOpen, setIsConfigOpen] = useState(false);
+    const { reservas, totalReservas, uniqueReserve, firstReserva } = useContext(PasajesContext);
+
+    // Cargar las reservas cuando el componente se monta
+    useEffect(() => {
+        totalReservas();
+        firstReserva();
+    }, []);
 
     const generateExcel = () => {
-        const data = [
-            { Operacion: '001', Fecha: '2024-11-08', Hora: '10:00', Nombre: 'John Doe', Documento: '12345678', N_Pasaje: 'A001', Precio: '50.00' },
-            // Agrega más datos si es necesario
-        ];
+        const data = reservas.map((reserva: any) => ({
+            Operacion: reserva.reserva_id,
+            Fecha: new Date(reserva.fecha_reserva).toLocaleDateString(),
+            Hora: new Date(reserva.horario?.hora_salida).toLocaleTimeString(),
+            Nombre: `${reserva.usuario?.nombre} ${reserva.usuario?.apellido}`,
+            Documento: reserva.usuario?.dni,
+            N_Pasaje: reserva.asiento?.numero_asiento,
+            Precio: reserva.precio,
+        }));
 
         const worksheet = XLSX.utils.json_to_sheet(data);
         const workbook = XLSX.utils.book_new();
+        
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Historial de Compras');
-
         XLSX.writeFile(workbook, 'Historial_de_Compras.xlsx');
     };
 
     const printReceipt = () => {
         const printWindow = window.open('', '_blank', 'width=800,height=600');
-        //@ts-ignore
-        printWindow.document.write(`
+        printWindow?.document.write(`
             <html>
                 <head>
                     <title>Imprimir Boleta</title>
@@ -31,9 +43,7 @@ const App = () => {
                 </head>
                 <body class="p-4">
                     <div class="max-w-sm mx-auto">
-                        
-                        ${ //@ts-ignore 
-                            document.getElementById('receipt').innerHTML}
+                        ${document.getElementById('receipt')?.innerHTML}
                     </div>
                     <script>
                         window.print();
@@ -42,8 +52,7 @@ const App = () => {
                 </body>
             </html>
         `);
-        //@ts-ignore
-        printWindow.document.close();
+        printWindow?.document.close();
     };
 
     return (
@@ -117,7 +126,8 @@ const App = () => {
                             Nueva Compra
                         </button>
                     </div>
-                    <h1 className="text-2xl font-bold">ㅤ </h1>
+
+                    {/* Tabla de Confirmación de Compra */}
                     <table className="w-full text-left border-collapse border border-gray-300">
                         <thead className="bg-gray-200">
                             <tr>
@@ -132,43 +142,70 @@ const App = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td colSpan={7} className="border border-gray-300 p-2 text-center">No hay datos disponibles</td>
-                                <td className="border border-gray-300 p-2 text-center">
-                                    <button onClick={printReceipt} className="bg-gray-300 p-2 rounded hover:bg-gray-400">
-                                        🖨️
-                                    </button>
-                                </td>
-                            </tr>
+                            {uniqueReserve.length === 0 ? (
+                                <tr>
+                                    <td colSpan={8} className="border border-gray-300 p-2 text-center">No hay datos disponibles</td>
+                                </tr>
+                            ) : (
+                                uniqueReserve.map((reserva: any) => (
+                                    <tr key={reserva.reserva_id}>
+                                        <td className="border border-gray-300 p-2">{reserva.reserva_id}</td>
+                                        <td className="border border-gray-300 p-2">{new Date(reserva.fecha_reserva).toLocaleDateString()}</td>
+                                        <td className="border border-gray-300 p-2">{new Date(reserva.horario?.hora_salida).toLocaleTimeString()}</td>
+                                        <td className="border border-gray-300 p-2">{reserva.usuario?.nombre} {reserva.usuario?.apellido}</td>
+                                        <td className="border border-gray-300 p-2">{reserva.usuario?.dni}</td>
+                                        <td className="border border-gray-300 p-2">{reserva.asiento?.numero_asiento}</td>
+                                        <td className="border border-gray-300 p-2">{reserva.precio}</td>
+                                        <td className="border border-gray-300 p-2 text-center">
+                                            <button onClick={printReceipt} className="bg-gray-300 p-2 rounded hover:bg-gray-400">
+                                                🖨️
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
-                    <h1 className="text-2xl font-bold">ㅤ </h1>
-                    <h1 className="text-2xl font-bold">ㅤ </h1>
-                    <div className="flex justify-between items-center my-4">
-                        <h1 className="text-2xl font-bold">Historial de Compras</h1>
+
+                    {/* Botón para exportar a Excel */}
+                    <div className="flex justify-end my-4">
                         <button 
                             onClick={generateExcel}
                             className="bg-green-600 hover:bg-green-700 text-white py-2 px-16 rounded">
-                            Excel
+                            Exportar a Excel
                         </button>
                     </div>
-                    <table className="w-full text-left border-collapse border border-gray-300">
+                        {/* Tabla de Confirmación de Compra */}
+                        <table className="w-full text-left border-collapse border border-gray-300">
                         <thead className="bg-gray-200">
                             <tr>
                                 <th className="border border-gray-300 p-2">Operación</th>
                                 <th className="border border-gray-300 p-2">Fecha</th>
                                 <th className="border border-gray-300 p-2">Hora</th>
-                                <th className="
-border border-gray-300 p-2">Nombre</th>
+                                <th className="border border-gray-300 p-2">Nombre</th>
                                 <th className="border border-gray-300 p-2">Documento</th>
                                 <th className="border border-gray-300 p-2">N° Pasaje</th>
                                 <th className="border border-gray-300 p-2">Precio del pasaje</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td colSpan={7} className="border border-gray-300 p-2 text-center">No hay datos disponibles</td>
-                            </tr>
+                            {reservas.length === 0 ? (
+                                <tr>
+                                    <td colSpan={8} className="border border-gray-300 p-2 text-center">No hay datos disponibles</td>
+                                </tr>
+                            ) : (
+                                reservas.map((reserva: any) => (
+                                    <tr key={reserva.reserva_id}>
+                                        <td className="border border-gray-300 p-2">{reserva.reserva_id}</td>
+                                        <td className="border border-gray-300 p-2">{new Date(reserva.fecha_reserva).toLocaleDateString()}</td>
+                                        <td className="border border-gray-300 p-2">{new Date(reserva.horario?.hora_salida).toLocaleTimeString()}</td>
+                                        <td className="border border-gray-300 p-2">{reserva.usuario?.nombre} {reserva.usuario?.apellido}</td>
+                                        <td className="border border-gray-300 p-2">{reserva.usuario?.dni}</td>
+                                        <td className="border border-gray-300 p-2">{reserva.asiento?.numero_asiento}</td>
+                                        <td className="border border-gray-300 p-2">{reserva.precio}</td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>

@@ -107,6 +107,7 @@ export interface Reserva {
 
 export interface createReserva{
 	estado: EstadoReserva
+	precio: number
 	fecha_reserva: Date
 	usuario_id: number
 	horario_id: number
@@ -131,4 +132,24 @@ export enum EstadoReserva {
 export enum TipoAsiento {
 	VENTANA = 'ventana',
 	PASILLO = 'pasillo',
+}
+
+export interface AsientoT {
+	asiento_id: number
+	numero_asiento: string
+	tipo: TipoAsiento
+	bus_id: number 
+}
+
+export interface totalReservas {
+	reserva_id: number
+	usuario_id: number
+	horario_id: number
+	asiento_id: number
+	estado: EstadoReserva
+	fecha_reserva: Date
+	precio: number
+	bus: Bus
+	ruta: Ruta
+	usuario: Usuario
 }

@@ -1,5 +1,6 @@
 import { Asiento } from '@/interface/types'
 import prisma from '@/libs/prisma'
+import { id } from 'date-fns/locale'
 import { NextResponse } from 'next/server'
 
 type Params = Promise<{ id: string[] }>
@@ -11,6 +12,9 @@ export async function GET(req: Request, { params }: { params: Params }) {
 			where: {
 				numero_asiento: id.toString(),
 			},
+			include:{
+				bus: true,
+			}
 		})
 
 		if (!asiento) {
@@ -61,11 +65,17 @@ export async function DELETE(req: Request, { params }: { params: Params }) {
 			where: { asiento_id: Number(id) },
 		})
 
+		if (!deleteAsiento) {
+			return NextResponse.json({ error: 'Asiento no encontrado' })
+		}
+
+
 		return NextResponse.json(deleteAsiento)
 	} catch (error) {
 		console.error(error)
+		
 		return NextResponse.json(
-			{ error: 'Error interno del servidor' },
+			{ error: 'Error interno del servidor' + Number(id) },
 			{ status: 500 }
 		)
 	}

@@ -68,6 +68,7 @@ model Asiento {
 
 model Reserva {
   reserva_id   Int        @id @default(autoincrement())
+  precio       Decimal   @db.Decimal(10,2)
   estado       Estado     @default(pendiente)
   fecha_reserva DateTime
   usuario      Usuario    @relation(fields: [usuario_id], references: [usuario_id])

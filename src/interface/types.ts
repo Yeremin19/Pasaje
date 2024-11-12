@@ -21,7 +21,7 @@ export interface UsuarioUpdate {
 export interface Reserva {
 	estado: EstadoReserva
 	fecha_reserva: Date
-	
+	precio: number
 	usuario_id: number
 	horario_id: number
 	asiento_id: number
