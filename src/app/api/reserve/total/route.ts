@@ -1,27 +1,28 @@
-import prisma from "@/libs/prisma";
-import { NextResponse } from "next/server";
+import prisma from '@/libs/prisma'
+import { NextResponse } from 'next/server'
 
 export async function GET() {
-    try {
-        const ultimaReserva = await prisma.reserva.findFirst({
-            include: {
-                usuario: true,
-                horario: true,
-                asiento: true,
-            },
-            orderBy: {
-                reserva_id: 'desc', 
-            },
-        });
-        
-        if (!ultimaReserva) {
-            throw new Error('No hay reservas');
-        }
+	try {
+		const reservas = await prisma.reserva.findMany({
+			include: {
+				usuario: true,
+				horario: true,
+				asiento: true,
+			},
+			orderBy: {
+				reserva_id: 'desc',
+			},
+			take: 1,
+		})
 
-        console.log(ultimaReserva);
-        return NextResponse.json(ultimaReserva);
-    } catch (error) {
-        console.error(error);
-        return NextResponse.error();
-    }
+		if (reservas.length === 0) {
+			throw new Error('No hay reservas')
+		}
+
+		console.log(reservas)
+		return NextResponse.json(reservas)
+	} catch (error) {
+		console.error(error)
+		return NextResponse.error()
+	}
 }

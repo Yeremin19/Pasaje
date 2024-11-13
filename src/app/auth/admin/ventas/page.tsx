@@ -9,6 +9,10 @@ const App = () => {
     const [isConfigOpen, setIsConfigOpen] = useState(false);
     const { reservas, totalReservas, uniqueReserve, firstReserva } = useContext(PasajesContext);
 
+    // Estado para la paginación en Historial de Compras
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
+
     // Cargar las reservas cuando el componente se monta
     useEffect(() => {
         totalReservas();
@@ -53,6 +57,21 @@ const App = () => {
             </html>
         `);
         printWindow?.document.close();
+    };
+
+    // Paginación para Historial de Compras
+    const totalPages = Math.ceil(reservas.length / itemsPerPage);
+    const currentReservations = reservas.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    const handlePreviousPage = () => {
+        if (currentPage > 1) setCurrentPage(currentPage - 1);
+    };
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages) setCurrentPage(currentPage + 1);
     };
 
     return (
@@ -118,6 +137,7 @@ const App = () => {
                     <h1 className="text-3xl font-bold">Sistema de Venta de Pasajes</h1>
                 </div>
                 <div className="mt-20">
+                    {/* Confirmación de Compra */}
                     <div className="flex justify-between items-center mb-4">
                         <h1 className="text-2xl font-bold">Confirmación de Compra</h1>
                         <button 
@@ -126,8 +146,6 @@ const App = () => {
                             Nueva Compra
                         </button>
                     </div>
-
-                    {/* Tabla de Confirmación de Compra */}
                     <table className="w-full text-left border-collapse border border-gray-300">
                         <thead className="bg-gray-200">
                             <tr>
@@ -142,11 +160,7 @@ const App = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {uniqueReserve.length === 0 ? (
-                                <tr>
-                                    <td colSpan={8} className="border border-gray-300 p-2 text-center">No hay datos disponibles</td>
-                                </tr>
-                            ) : (
+                            {Array.isArray(uniqueReserve) && uniqueReserve.length > 0 ? (
                                 uniqueReserve.map((reserva: any) => (
                                     <tr key={reserva.reserva_id}>
                                         <td className="border border-gray-300 p-2">{reserva.reserva_id}</td>
@@ -163,20 +177,28 @@ const App = () => {
                                         </td>
                                     </tr>
                                 ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={8} className="border border-gray-300 p-2 text-center">No hay datos disponibles</td>
+                                </tr>
                             )}
                         </tbody>
                     </table>
 
                     {/* Botón para exportar a Excel */}
                     <div className="flex justify-end my-4">
+                        ㅤ
+                    </div>
+                    {/* Historial de Compra con paginación */}
+                    <div className="flex justify-between items-center mb-4">
+                        <h1 className="text-2xl font-bold">Historial de Compra</h1>
                         <button 
-                            onClick={generateExcel}
-                            className="bg-green-600 hover:bg-green-700 text-white py-2 px-16 rounded">
-                            Exportar a Excel
+                             onClick={generateExcel}
+                             className="bg-green-600 hover:bg-green-700 text-white py-2 px-16 rounded">
+                             Excel
                         </button>
                     </div>
-                        {/* Tabla de Confirmación de Compra */}
-                        <table className="w-full text-left border-collapse border border-gray-300">
+                    <table className="w-full text-left border-collapse border border-gray-300">
                         <thead className="bg-gray-200">
                             <tr>
                                 <th className="border border-gray-300 p-2">Operación</th>
@@ -189,12 +211,12 @@ const App = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {reservas.length === 0 ? (
+                            {currentReservations.length === 0 ? (
                                 <tr>
                                     <td colSpan={8} className="border border-gray-300 p-2 text-center">No hay datos disponibles</td>
                                 </tr>
                             ) : (
-                                reservas.map((reserva: any) => (
+                                currentReservations.map((reserva: any) => (
                                     <tr key={reserva.reserva_id}>
                                         <td className="border border-gray-300 p-2">{reserva.reserva_id}</td>
                                         <td className="border border-gray-300 p-2">{new Date(reserva.fecha_reserva).toLocaleDateString()}</td>
@@ -208,6 +230,24 @@ const App = () => {
                             )}
                         </tbody>
                     </table>
+
+                    {/* Paginación */}
+                    <div className="flex justify-between items-center mt-4">
+                        <button 
+                            onClick={handlePreviousPage} 
+                            disabled={currentPage === 1} 
+                            className="bg-gray-300 hover:bg-gray-400 p-2 rounded disabled:opacity-50"
+                        >
+                            Anterior
+                        </button>
+                        <span>Página {currentPage} de {totalPages}</span>
+                        <button 
+                            onClick={handleNextPage} 
+                            disabled={currentPage === totalPages} 
+                            className="bg-gray-300 hover:bg-gray-400 p-2 rounded disabled:opacity-50">
+                            Siguiente
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

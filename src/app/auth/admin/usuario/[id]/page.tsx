@@ -12,7 +12,7 @@ function UsuarioEditPage() {
 	const [correo, setCorreo] = React.useState<string>('')
 	const [password, setPassword] = React.useState<string>('')
 	const [telefono, setTelefono] = React.useState<string>('')
-	const [rol, setRol] = React.useState<Rol>(Rol.CLIENTE)
+	const [rol, setRol] = React.useState<Rol>(Rol.CLIENTE) 
 	const [redirectTo, setRedirectTo] = React.useState(false)
 
 	const { updateUsuario } = useContext(PasajesContext)
