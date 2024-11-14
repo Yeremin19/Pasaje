@@ -18,10 +18,14 @@ function HorarioPage() {
 	const [fecha, setFecha] = useState('');
 	const [horaSalida, setHoraSalida] = useState('');
 	const [horaLlegada, setHoraLlegada] = useState('');
-	const [precio, setPrecio] = useState('');
 	const [busId, setBusId] = useState(0);
 	const [rutaId, setRutaId] = useState(0);
 	const [isConfigOpen, setIsConfigOpen] = useState(false);
+
+	// Paginación
+	const [currentPage, setCurrentPage] = useState(1);
+	const itemsPerPage = 5;
+	const totalPages = Math.ceil(horarios.length / itemsPerPage);
 
 	useEffect(() => {
 		totalHorarios();
@@ -29,21 +33,19 @@ function HorarioPage() {
 		totalRutas();
 	}, []);
 
-	const handlecreateHorario = async (e: React.FormEvent) => {
+	const handlecreateHorario = async (e: any) => {
 		e.preventDefault();
 		try {
 			const horario = await createHorario({
 				fecha: new Date(fecha),
 				hora_salida: new Date(`${fecha}T${horaSalida}`),
 				hora_llegada: new Date(`${fecha}T${horaLlegada}`),
-				// precio: Number(precio),
 				bus_id: busId,
 				ruta_id: rutaId,
 			});
 			setFecha('');
 			setHoraSalida('');
 			setHoraLlegada('');
-			// setPrecio('');
 			setBusId(0);
 			setRutaId(0);
 			totalHorarios();
@@ -53,12 +55,26 @@ function HorarioPage() {
 		}
 	};
 
-	const handledeleteHorario = async (id:number) => {
+	const handledeleteHorario = async (id: any) => {
 		try {
 			await deleteHorario(id);
 		} catch (error) {
 			console.error('Error en handleDeleteBus', error);
 		}
+	};
+
+	// Calcular los datos a mostrar en la página actual
+	const indexOfLastItem = currentPage * itemsPerPage;
+	const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+	const currentItems = horarios.slice(indexOfFirstItem, indexOfLastItem);
+
+	// Funciones para manejar la paginación
+	const nextPage = () => {
+		if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+	};
+
+	const prevPage = () => {
+		if (currentPage > 1) setCurrentPage(currentPage - 1);
 	};
 
 	return (
@@ -84,7 +100,7 @@ function HorarioPage() {
                         <span>🚌</span>
                         <span>Buses</span>
                     </a>
-                    <a href="/auth/admin/pasajes" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
+                    <a href="/auth/admin/usuario" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
                         <span>🎫</span>
                         <span>Pasajes</span>
                     </a>
@@ -156,9 +172,7 @@ function HorarioPage() {
 							/>
 						</div>
 						<div className='flex flex-col'>
-							<label className='mb-2 font-medium text-black'>
-								Hora Llegada
-							</label>
+							<label className='mb-2 font-medium text-black'>Hora Llegada</label>
 							<input
 								value={horaLlegada}
 								onChange={e => setHoraLlegada(e.target.value)}
@@ -166,7 +180,6 @@ function HorarioPage() {
 								className='border border-gray-300 p-2 rounded'
 							/>
 						</div>
-
 					</div>
 					<div className='flex gap-4'>
 						<div className='flex flex-col'>
@@ -176,15 +189,12 @@ function HorarioPage() {
 								onChange={e => setBusId(Number(e.target.value))}
 								className='border border-gray-300 p-2 rounded'
 							>
-								<option value='0'>Selecion Bus</option>
+								<option value='0'>Seleccionar Bus</option>
 								{buses?.map(bus => (
 									<option key={bus.bus_id} value={bus.bus_id}>
 										{bus.modelo} - {bus.placa}
 									</option>
 								))}
-								{/* <option value='1'>Bus 1</option>
-								<option value='2'>Bus 2</option>
-								<option value='3'>Bus 3</option> */}
 							</select>
 						</div>
 						<div className='flex flex-col'>
@@ -194,15 +204,12 @@ function HorarioPage() {
 								onChange={e => setRutaId(Number(e.target.value))}
 								className='border border-gray-300 p-2 rounded'
 							>
-								<option value='0'>Selecione un ruta</option>
+								<option value='0'>Seleccionar Ruta</option>
 								{rutas.map(ruta => (
 									<option key={ruta.ruta_id} value={ruta.ruta_id}>
 										{ruta.origen} - {ruta.destino}
 									</option>
 								))}
-								{/* <option value='1'>Ruta 1</option>
-								<option value='2'>Ruta 2</option>
-								<option value='3'>Ruta 3</option> */}
 							</select>
 						</div>
 					</div>
@@ -222,54 +229,49 @@ function HorarioPage() {
 				<table className='w-full bg-white border border-gray-200 text-black text-sm'>
 					<thead>
 						<tr className='bg-gray-100'>
-							<th className='py-2 px-4 border-b'>ID</th>
-							<th className='py-2 px-4 border-b'>Fecha</th>
-							<th className='py-2 px-4 border-b'>Hora Salida</th>
-							<th className='py-2 px-4 border-b'>Hora Llegada</th>
-							<th className='py-2 px-4 border-b'>ID Bus</th>
-							<th className='py-2 px-4 border-b'>Modelo</th>
-							<th className='py-2 px-4 border-b'>Placa</th>
-							<th className='py-2 px-4 border-b'>Capacidad</th>
-							<th className='py-2 px-4 border-b'>ID Ruta</th>
-							<th className='py-2 px-4 border-b'>Origen</th>
-							<th className='py-2 px-4 border-b'>Destino</th>
-							<th className='py-2 px-4 border-b'>Distancia - KM</th>
-							<th className='py-2 px-4 border-b'>Acciones</th>
+							<th className='py-2 px-4 border border-gray-300 text-left'>ID</th>
+							<th className='py-2 px-4 border border-gray-300 text-left'>Fecha</th>
+							<th className='py-2 px-4 border border-gray-300 text-left'>Hora Salida</th>
+							<th className='py-2 px-4 border border-gray-300 text-left'>Hora Llegada</th>
+							<th className='py-2 px-4 border border-gray-300 text-left'>ID Bus</th>
+							<th className='py-2 px-4 border border-gray-300 text-left'>Modelo</th>
+							<th className='py-2 px-4 border border-gray-300 text-left'>Placa</th>
+							<th className='py-2 px-4 border border-gray-300 text-left'>Capacidad</th>
+							<th className='py-2 px-4 border border-gray-300 text-left'>ID Ruta</th>
+							<th className='py-2 px-4 border border-gray-300 text-left'>Origen</th>
+							<th className='py-2 px-4 border border-gray-300 text-left'>Destino</th>
+							<th className='py-2 px-4 border border-gray-300 text-left'>Distancia - KM</th>
+							<th className='py-2 px-4 border border-gray-300 text-left'>Acciones</th>
 						</tr>
 					</thead>
 					<tbody>
-						{horarios.map(horario => (
+						{currentItems.map(horario => (
 							<tr key={horario.horario_id} className='hover:bg-gray-100'>
-								<td className='py-2 px-4 border-b'>{horario.horario_id}</td>
-								<td className='py-2 px-4 border-b'>
+								<td className='py-2 px-4 border border-gray-300'>{horario.horario_id}</td>
+								<td className='py-2 px-4 border border-gray-300'>
 									{new Date(horario.fecha).toLocaleDateString()}
 								</td>
-								<td className='py-2 px-4 border-b'>
+								<td className='py-2 px-4 border border-gray-300'>
 									<Time time={horario.hora_salida} />
 								</td>
-								<td className='py-2 px-4 border-b'>
+								<td className='py-2 px-4 border border-gray-300'>
 									<Time time={horario.hora_llegada} />
 								</td>
-								<td className='py-2 px-4 border-b'>{horario.precio}</td>
-								<td className='py-2 px-4 border-b'>{horario.bus_id}</td>
-								<td className='py-2 px-4 border-b'>{horario.bus?.modelo}</td>
-								<td className='py-2 px-4 border-b'>{horario.bus?.placa}</td>
-								<td className='py-2 px-4 border-b'>{horario.bus?.capacidad}</td>
-								<td className='py-2 px-4 border-b'>{horario.ruta?.ruta_id}</td>
-								<td className='py-2 px-4 border-b'>{horario.ruta?.origen}</td>
-								<td className='py-2 px-4 border-b'>{horario.ruta?.destino}</td>
-								<td className='py-2 px-4 border-b'>
-									{horario.ruta?.distancia_km}
-								</td>
-								<td className='py-0 px-4 border-b justify-between'>
-									<button className='bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded mr-2'>
+								<td className='py-2 px-4 border border-gray-300'>{horario.bus_id}</td>
+								<td className='py-2 px-4 border border-gray-300'>{horario.bus?.modelo}</td>
+								<td className='py-2 px-4 border border-gray-300'>{horario.bus?.placa}</td>
+								<td className='py-2 px-4 border border-gray-300'>{horario.bus?.capacidad}</td>
+								<td className='py-2 px-4 border border-gray-300'>{horario.ruta?.ruta_id}</td>
+								<td className='py-2 px-4 border border-gray-300'>{horario.ruta?.origen}</td>
+								<td className='py-2 px-4 border border-gray-300'>{horario.ruta?.destino}</td>
+								<td className='py-2 px-4 border border-gray-300'>{horario.ruta?.distancia_km}</td>
+								<td className='py-2 px-4 border border-gray-300 flex space-x-2'>
+									<button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded'>
 										<a href={`/auth/admin/horario/${horario.fecha}`}>✍️</a>
 									</button>
 									<button
-										onClick={() => {
-											handledeleteHorario(horario.horario_id)
-										}}
-										className='bg-red-500 hover:bg-red-700 text-black font-bold py-2 px-4 rounded'
+										onClick={() => handledeleteHorario(horario.horario_id)}
+										className='bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded'
 									>
 										X
 									</button>
@@ -278,6 +280,24 @@ function HorarioPage() {
 						))}
 					</tbody>
 				</table>
+				{/* Paginación */}
+				<div className='flex justify-between items-center mt-4'>
+					<button
+						onClick={prevPage}
+						disabled={currentPage === 1}
+						className='bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-1 px-4 rounded disabled:opacity-50'
+					>
+						Anterior
+					</button>
+					<span>Página {currentPage} de {totalPages}</span>
+					<button
+						onClick={nextPage}
+						disabled={currentPage === totalPages}
+						className='bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-1 px-4 rounded disabled:opacity-50'
+					>
+						Siguiente
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -285,4 +305,4 @@ function HorarioPage() {
 	)
 }
 
-export default HorarioPage
+export default HorarioPage;

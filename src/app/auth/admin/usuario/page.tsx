@@ -2,6 +2,95 @@
 import { PasajesContext } from '@/context/PasajesContext';
 import React, { useContext, useEffect, useState } from 'react';
 
+function App() {
+    const [isConfigOpen, setIsConfigOpen] = useState(false);
+
+    return (
+        <div className="flex">
+            {/* Sidebar */}
+            <aside className="w-64 bg-green-600 text-white flex flex-col p-5">
+                <div className="flex flex-col items-center mb-8">
+                    <div className="w-16 h-16 bg-gray-300 rounded-full mb-4 overflow-hidden">
+                        <img
+                            src="/loguito.jpeg"
+                            alt="Profile"
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                    <h2 className="text-lg font-bold">EL RAPIDO</h2>
+                </div>
+                <nav className="space-y-4">
+                    <a href="/" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
+                        <span>🏠</span>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="/auth/admin/bus" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
+                        <span>🚌</span>
+                        <span>Buses</span>
+                    </a>
+                    <a href="/auth/admin/usuario" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
+                        <span>🎫</span>
+                        <span>Pasajes</span>
+                    </a>
+                    <a href="/auth/admin/ventas" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
+                        <span>💼</span>
+                        <span>Ventas</span>
+                    </a>
+                    <a href="/auth/admin/reporte" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
+                        <span>📝</span>
+                        <span>Reportes</span>
+                    </a>
+                    <div>
+                        <div className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded cursor-pointer" onClick={() => setIsConfigOpen(!isConfigOpen)}>
+                            <span>⚙️</span>
+                            <span>Configuraciónㅤㅤㅤ✛</span>
+                        </div>
+                        {isConfigOpen && (
+                            <div className="ml-6 mt-2 space-y-2">
+                                <a href="/auth/admin/informacion" className="block text-teal-300 hover:underline">Información de la Empresa</a>
+                            </div>
+                        )}
+                    </div>
+                </nav>
+                <button className="mt-auto bg-red-600 hover:bg-red-700 p-2 rounded justify-center">
+                    Cerrar sesión
+                </button>
+            </aside>
+
+            {/* Main content */}
+            <div className="flex-1 bg-gray-100 p-4">
+                {/* Header */}
+                <div className="bg-cyan-800 text-white p-4 shadow-md fixed top-0 z-50 w-full" style={{ margin: 0, left: '256px' }}>
+                    <h1 className="text-3xl font-bold">Sistema de Venta de Pasajes</h1>
+                </div>
+
+                <div className="mt-16">
+                    {/* Main Text Content */}
+                    <div className="mt-8">
+                        <h1 className="text-2xl font-bold mb-4">Huaraz - La Union (Huanuco)</h1>
+                    </div>
+                    
+                    {/* Botones Usuario, Asiento y Reserva en el lado izquierdo */}
+                    <div className="flex space-x-2 mb-8">
+                        <a href="/auth/admin/usuario" className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md">
+                            Clientes
+                        </a>
+                        <a href="/auth/admin/asiento" className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md">
+                            Asiento
+                        </a>
+                        <a href="/auth/admin/reserva" className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md">
+                            Pasaje
+                        </a>
+                    </div>
+
+                    {/* UsuarioPage component */}
+                    <UsuarioPage />
+                </div>
+            </div>
+        </div>
+    );
+}
+
 function UsuarioPage() {
 	const { totalUsuarios, usuarios, createUsuario, deleteUsuario } = useContext(PasajesContext);
 
@@ -41,11 +130,10 @@ function UsuarioPage() {
 
 	return (
 		<div className="container mx-auto py-10">
-			<h1 className="text-3xl font-bold mb-6 text-center">Gestión de Usuarios</h1>
 
 			{/* Formulario en un cuadro */}
 			<div className="bg-white shadow-lg rounded-lg p-6 mb-8 max-w-lg mx-auto border border-gray-300">
-				<h2 className="text-2xl font-semibold mb-4 text-center">Crear Usuario</h2>
+				<h2 className="text-2xl font-semibold mb-4 text-center">Nuevo Cliente</h2>
 				<form onSubmit={handleCreateUsuario}>
 					<div className="flex flex-col gap-4">
 						<input
@@ -97,53 +185,8 @@ function UsuarioPage() {
 				</form>
 			</div>
 
-			{/* Contenedor de la tabla de usuarios */}
-			<div className="bg-white shadow-lg rounded-lg p-8 mx-auto max-w-5xl border border-gray-300">
-				<h2 className="text-2xl font-semibold mb-6 text-center">Lista de Usuarios</h2>
-				{/* Contenedor con scroll */}
-				<div className="overflow-y-auto max-h-80">
-					<table className="w-full bg-white text-left border border-gray-200 rounded-lg text-gray-700 text-lg">
-						<thead>
-							<tr className="bg-gray-100 border-b border-gray-300">
-								<th className="py-4 px-6">DNI</th>
-								<th className="py-4 px-6">Nombre</th>
-								<th className="py-4 px-6">Apellidos</th>
-								<th className="py-4 px-6">Correo</th>
-								<th className="py-4 px-6">Password</th>
-								<th className="py-4 px-6">Rol</th>
-								<th className="py-4 px-6">Teléfono</th>
-								<th className="py-4 px-6">Acciones</th>
-							</tr>
-						</thead>
-						<tbody>
-							{usuarios.map((usuario) => (
-								<tr key={usuario.usuario_id} className="border-b border-gray-300 hover:bg-gray-50">
-									<td className="py-4 px-6">{usuario.dni}</td>
-									<td className="py-4 px-6">{usuario.nombre}</td>
-									<td className="py-4 px-6">{usuario.apellido}</td>
-									<td className="py-4 px-6">{usuario.correo}</td>
-									<td className="py-4 px-6">{usuario.password}</td>
-									<td className="py-4 px-6">{usuario.rol}</td>
-									<td className="py-4 px-6">{usuario.telefono}</td>
-									<td className="py-4 px-6 flex gap-2">
-										<button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-											<a href={`/auth/admin/usuario/${usuario.dni}`}>Editar</a>
-										</button>
-										<button
-											onClick={() => handleDeleteUsuario(usuario.usuario_id)}
-											className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-										>
-											Eliminar
-										</button>
-									</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
-				</div>
-			</div>
 		</div>
 	);
 }
 
-export default UsuarioPage;
+export default App;

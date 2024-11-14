@@ -85,7 +85,7 @@ const App = () => {
                     <h1 className="text-2xl font-bold mb-4">Huaraz - La Union (Huanuco)</h1>
                     <div className="flex mt-4">
                         <div className="w-1/3">
-                            <img className='flex items-center' src="/rapido.png " alt="Bus and city illustration" />
+                            <img className='flex items-center' src="/rapido.png " alt="" />
                         </div>
                     </div>
             </div>

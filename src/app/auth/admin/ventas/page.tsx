@@ -97,7 +97,7 @@ const App = () => {
                         <span>🚌</span>
                         <span>Buses</span>
                     </a>
-                    <a href="/auth/admin/pasajes" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
+                    <a href="/auth/admin/usuario" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
                         <span>🎫</span>
                         <span>Pasajes</span>
                     </a>

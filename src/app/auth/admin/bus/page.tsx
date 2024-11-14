@@ -1,6 +1,6 @@
 "use client";
-import { PasajesContext } from '@/context/PasajesContext';
 import React, { useContext, useEffect, useState } from 'react';
+import { PasajesContext } from '@/context/PasajesContext';
 
 function BusPage() {
     const { buses, totalBuses, crearBuses, deleteBus } = useContext(PasajesContext);
@@ -9,6 +9,10 @@ function BusPage() {
     const [modelo, setModelo] = useState('');
     const [capacidad, setCapacidad] = useState('');
     const [isConfigOpen, setIsConfigOpen] = useState(false);
+
+    // Estado para la paginación
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 4; // Número de elementos por página
 
     useEffect(() => {
         totalBuses();
@@ -39,6 +43,19 @@ function BusPage() {
         }
     };
 
+    // Función para manejar el cambio de página
+    const handlePageChange = (pageNumber: any) => {
+        setCurrentPage(pageNumber);
+    };
+
+    // Calcular los buses que se mostrarán en la página actual
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentBuses = buses.slice(indexOfFirstItem, indexOfLastItem);
+
+    // Calcular el número total de páginas
+    const totalPages = Math.ceil(buses.length / itemsPerPage);
+
     return (
         <div className='flex min-h-screen'>
             {/* Sidebar */}
@@ -62,7 +79,7 @@ function BusPage() {
                         <span>🚌</span>
                         <span>Buses</span>
                     </a>
-                    <a href="/auth/admin/pasajes" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
+                    <a href="/auth/admin/usuario" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
                         <span>🎫</span>
                         <span>Pasajes</span>
                     </a>
@@ -156,7 +173,7 @@ function BusPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {buses.map(bus => (
+                                {currentBuses.map(bus => (
                                     <tr key={bus.bus_id} className='even:bg-gray-100'>
                                         <td className='border px-4 py-2 font-medium'>{bus.bus_id}</td>
                                         <td className='border px-4 py-2'>{bus.placa}</td>
@@ -178,6 +195,17 @@ function BusPage() {
                                 ))}
                             </tbody>
                         </table>
+                    </div>
+                    <div className="flex justify-center mt-4">
+                        {Array.from({ length: totalPages }, (_, index) => (
+                            <button
+                                key={index}
+                                onClick={() => handlePageChange(index + 1)}
+                                className={`mx-1 px-3 py-1 border rounded ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+                            >
+                                {index + 1}
+                            </button>
+                        ))}
                     </div>
                 </div>
             </div>

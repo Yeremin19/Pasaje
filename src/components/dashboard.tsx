@@ -116,7 +116,7 @@ function Dashboard() {
                   <img src="reporte.png" alt="Reportes" className="w-20 h-20 mx-auto" />
                 </div>
                 <h2 className="text-md font-semibold">Reportes</h2>
-                <p className="text-2xl font-bold">50</p>
+                <p className="text-2xl font-bold">0</p>
               </div>
             </div>
 
@@ -126,7 +126,7 @@ function Dashboard() {
                   <img src="buses.png" alt="Buses en Ruta" className="w-20 h-20 mx-auto" />
                 </div>
                 <h2 className="text-md font-semibold">Buses en Ruta</h2>
-                <p className="text-2xl font-bold">10</p>
+                <p className="text-2xl font-bold">11</p>
               </div>
             </div>
 
@@ -136,7 +136,7 @@ function Dashboard() {
                   <img src="rutas.png" alt="Rutas Populares" className="w-20 h-20 mx-auto" />
                 </div>
                 <h2 className="text-md font-semibold">Rutas Populares</h2>
-                <p className="text-2xl font-bold">5</p>
+                <p className="text-2xl font-bold">7</p>
               </div>
             </div>
 

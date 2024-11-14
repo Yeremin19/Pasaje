@@ -28,7 +28,7 @@ const App = () => {
                         <span>🚌</span>
                         <span>Buses</span>
                     </a>
-                    <a href="/auth/admin/pasajes" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
+                    <a href="/auth/admin/usuario" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
                         <span>🎫</span>
                         <span>Pasajes</span>
                     </a>
@@ -70,19 +70,16 @@ const App = () => {
                             <div className="grid grid-cols-2 gap-4 mb-4">
                                 <div>
                                     <label className="block font-semibold mb-2">Nombre de la empresa</label>
-                                    <input type="text" className="border border-gray-300 p-2 rounded w-full" defaultValue="StockInventarios" />
+                                    <input type="text" className="border border-gray-300 p-2 rounded w-full" defaultValue="Servirtur El Rápido" />
                                 </div>
                                 <div>
                                     <label className="block font-semibold mb-2">Teléfono de la empresa</label>
-                                    <input type="text" className="border border-gray-300 p-2 rounded w-full" defaultValue="9611702915" />
+                                    <input type="text" className="border border-gray-300 p-2 rounded w-full" defaultValue="900197847" />
                                 </div>
                             </div>
                             <div className="mb-4">
                                 <label className="block font-semibold mb-2">Dirección de la empresa</label>
-                                <input type="text" className="border border-gray-300 p-2 rounded w-full" defaultValue="Calle 10 #123, Colonia San Pedro, Ciudad de México, Código Postal 01230" />
-                            </div>
-                            <div className="flex justify-center">
-                                <button type="submit" className="bg-teal-600 hover:bg-teal-700 text-white py-2 px-4 rounded">Actualizar</button>
+                                <input type="text" className="border border-gray-300 p-2 rounded w-full" defaultValue="Jirón 28 de Julio, Huaraz, Perú" />
                             </div>
                         </form>
                     </div>

@@ -3,19 +3,22 @@ import { PasajesContext } from '@/context/PasajesContext';
 import React, { useContext, useEffect, useState } from 'react';
 
 function RutaPage() {
-    const [origen, setOrigen] = React.useState('');
-    const [destino, setDestino] = React.useState('');
-    const [distancia, setDistancia] = React.useState('');
+    const [origen, setOrigen] = useState('');
+    const [destino, setDestino] = useState('');
+    const [distancia, setDistancia] = useState('');
     const [isConfigOpen, setIsConfigOpen] = useState(false);
 
-    const { totalRutas, rutas, crearRutas, deleteRuta } =
-        useContext(PasajesContext);
+    const { totalRutas, rutas, crearRutas, deleteRuta } = useContext(PasajesContext);
+
+    // Estados para la paginación
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 4; // Elementos por página
 
     useEffect(() => {
         totalRutas();
     }, []);
 
-    const handleCreateBus = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleCreateBus = async (e: any) => {
         e.preventDefault();
         await crearRutas({ origen, destino, distancia_km: Number(distancia) });
         setOrigen('');
@@ -23,13 +26,21 @@ function RutaPage() {
         setDistancia('');
     };
 
-    const handleDeleteRuta = async (id: number) => {
+    const handleDeleteRuta = async (id: any) => {
         try {
             await deleteRuta(id);
         } catch (error) {
             console.error('Error en handleDeleteRuta', error);
         }
     };
+
+    // Cálculo de elementos de la página actual
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentRutas = rutas.slice(indexOfFirstItem, indexOfLastItem);
+
+    // Número total de páginas
+    const totalPages = Math.ceil(rutas.length / itemsPerPage);
 
     return (
         <div className='flex min-h-screen'>
@@ -54,7 +65,7 @@ function RutaPage() {
                         <span>🚌</span>
                         <span>Buses</span>
                     </a>
-                    <a href="/auth/admin/pasajes" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
+                    <a href="/auth/admin/usuario" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
                         <span>🎫</span>
                         <span>Pasajes</span>
                     </a>
@@ -102,9 +113,6 @@ function RutaPage() {
                         <a href={`/auth/admin/horario/`}>Horario de Buses</a>
                     </button>
                     <h2 className='text-2xl font-bold mb-4'>
-
-                    </h2>
-                    <h2 className='text-2xl font-bold mb-4'>
                         Crear Ruta
                     </h2>
                     <form
@@ -148,7 +156,7 @@ function RutaPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {rutas?.map(ruta => (
+                                {currentRutas?.map(ruta => (
                                     <tr key={ruta.ruta_id} className='even:bg-gray-100'>
                                         <td className='border border-gray-300 px-4 py-2'>{ruta.origen}</td>
                                         <td className='border border-gray-300 px-4 py-2'>{ruta.destino}</td>
@@ -168,6 +176,18 @@ function RutaPage() {
                                 ))}
                             </tbody>
                         </table>
+                        {/* Paginación */}
+                        <div className="flex justify-center mt-4">
+                            {Array.from({ length: totalPages }, (_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => setCurrentPage(index + 1)}
+                                    className={`mx-1 px-3 py-1 border rounded ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+                                >
+                                    {index + 1}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
