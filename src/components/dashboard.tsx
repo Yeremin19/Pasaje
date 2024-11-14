@@ -1,8 +1,9 @@
 "use client";
-import React from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Sidebar from '../components/sidebar'; // Ajusta la ruta si es necesario
 import { Bar, Doughnut, Line, Scatter } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
+import { getReservas } from '@/actions/reserva'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, ArcElement);
 
@@ -56,6 +57,37 @@ function Dashboard() {
     ],
   };
 
+  const [reservasTotalPrecio, setReservasTotalPrecio] = useState(0)
+  const [reservasTotal, setReservasTotal] = useState(0)
+
+
+  useEffect(() => {
+
+    const getReservasTotal = async () => {
+      const reservas: [{precio: string}] = await getReservas()
+
+      let totalPrecio: number = 0
+      let totalReservas = 0
+
+      reservas.forEach( reserva => {
+            if (reserva.precio) {
+              //@ts-ignore
+              totalPrecio += Number(reserva.precio);
+            }
+            totalReservas += 1
+          }
+      )
+
+      // @ts-ignore
+      setReservasTotalPrecio(totalPrecio)
+      setReservasTotal(totalReservas)
+
+    }
+
+    getReservasTotal()
+
+  }, []);
+
   return (
     <div className="flex min-h-screen bg-gray-200">
       <Sidebar />
@@ -74,7 +106,7 @@ function Dashboard() {
                   <img src="vendidos.png" alt="Pasajes Vendidos" className="w-20 h-20 mx-auto" />
                 </div>
                 <h2 className="text-md font-semibold">Pasajes Vendidos</h2>
-                <p className="text-2xl font-bold">120</p>
+                <p className="text-2xl font-bold">{reservasTotal}</p>
               </div>
             </div>
 
@@ -114,7 +146,7 @@ function Dashboard() {
                   <img src="ingresos.png" alt="Ingresos del Día" className="w-20 h-20 mx-auto" />
                 </div>
                 <h2 className="text-md font-semibold">Ingresos del Día</h2>
-                <p className="text-2xl font-bold">S/ 3000</p>
+                <p className="text-2xl font-bold">{reservasTotalPrecio}</p>
               </div>
             </div>
           </div>

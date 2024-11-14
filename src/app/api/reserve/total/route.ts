@@ -19,7 +19,6 @@ export async function GET() {
 			throw new Error('No hay reservas')
 		}
 
-		console.log(reservas)
 		return NextResponse.json(reservas)
 	} catch (error) {
 		console.error(error)

@@ -13,72 +13,69 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Usuario {
-  usuario_id  Int      @id @default(autoincrement())
-  nombre      String   @db.VarChar(50)
-  apellido    String   @db.VarChar(50)
-  dni         String   @unique @db.VarChar(20)
-  correo      String   @unique @db.VarChar(100)
-  telefono    String   @db.VarChar(9)
-  password    String   @db.VarChar(100)
-  rol         Rol      @default(cliente)
-  reservas    Reserva[]
-
+  usuario_id Int       @id @default(autoincrement())
+  nombre     String    @db.VarChar(50)
+  apellido   String    @db.VarChar(50)
+  dni        String    @unique @db.VarChar(20)
+  correo     String    @unique @db.VarChar(100)
+  telefono   String    @db.VarChar(9)
+  password   String    @db.VarChar(100)
+  rol        Rol       @default(cliente)
+  reservas   Reserva[]
 }
 
 model Bus {
-  bus_id     Int       @id @default(autoincrement())
-  placa      String    @unique @db.VarChar(10)
-  modelo     String?   @db.VarChar(50)
-  capacidad  Int
-  horarios   Horario[]
-  asientos   Asiento[]
+  bus_id    Int       @id @default(autoincrement())
+  placa     String    @unique @db.VarChar(10)
+  modelo    String?   @db.VarChar(50)
+  capacidad Int
+  horarios  Horario[]
+  asientos  Asiento[]
 }
 
 model Ruta {
-  ruta_id     Int       @id @default(autoincrement())
-  origen      String    @db.VarChar(100)
-  destino     String    @db.VarChar(100)
+  ruta_id      Int       @id @default(autoincrement())
+  origen       String    @db.VarChar(100)
+  destino      String    @db.VarChar(100)
   distancia_km Decimal?
-  horarios    Horario[]
+  horarios     Horario[]
 }
 
 model Horario {
-  horario_id   Int       @id @default(autoincrement())
+  horario_id   Int      @id @default(autoincrement())
   fecha        DateTime
   hora_salida  DateTime
   hora_llegada DateTime
- 
-  ruta         Ruta      @relation(fields: [ruta_id], references: [ruta_id])
-  ruta_id      Int
-  bus          Bus       @relation(fields: [bus_id], references: [bus_id])
-  bus_id       Int
-  reservas     Reserva[]
+
+  ruta     Ruta      @relation(fields: [ruta_id], references: [ruta_id])
+  ruta_id  Int
+  bus      Bus       @relation(fields: [bus_id], references: [bus_id])
+  bus_id   Int
+  reservas Reserva[]
 }
 
 model Asiento {
-  asiento_id      Int       @id @default(autoincrement())
-  numero_asiento  String    @db.VarChar(5)
-  tipo            TipoAsiento
-  bus             Bus       @relation(fields: [bus_id], references: [bus_id])
-  bus_id          Int
-  reservas        Reserva[]
+  asiento_id     Int         @id @default(autoincrement())
+  numero_asiento String      @db.VarChar(5)
+  tipo           TipoAsiento
+  bus            Bus         @relation(fields: [bus_id], references: [bus_id])
+  bus_id         Int
+  reservas       Reserva[]
 }
 
 model Reserva {
-  reserva_id   Int        @id @default(autoincrement())
-  precio       Decimal   @db.Decimal(10,2)
-  estado       Estado     @default(pendiente)
+  reserva_id    Int      @id @default(autoincrement())
+  precio        Decimal  @db.Decimal(10, 2)
+  estado        Estado   @default(pendiente)
   fecha_reserva DateTime
-  usuario      Usuario    @relation(fields: [usuario_id], references: [usuario_id])
-  usuario_id   Int
-  horario      Horario    @relation(fields: [horario_id], references: [horario_id])
-  horario_id   Int
-  asiento      Asiento    @relation(fields: [asiento_id], references: [asiento_id])
-  asiento_id   Int
+  usuario       Usuario  @relation(fields: [usuario_id], references: [usuario_id])
+  usuario_id    Int
+  horario       Horario  @relation(fields: [horario_id], references: [horario_id])
+  horario_id    Int
+  asiento       Asiento  @relation(fields: [asiento_id], references: [asiento_id])
+  asiento_id    Int
 }
-
 
 enum Rol {
   admin
