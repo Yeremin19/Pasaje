@@ -27,7 +27,7 @@ const App = () => {
                     </div>
                     <h2 className="text-lg font-bold">EL RAPIDO</h2>
                 </div>
-                <nav className="space-y-4">
+                <nav className="space-y-4 h-screen w-full">
                     <a href="/" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
                         <span>🏠</span>
                         <span>Dashboard</span>
@@ -64,6 +64,7 @@ const App = () => {
                     Cerrar sesión
                 </button>
             </aside>
+            
 
             {/* Main content */}
             <div className="flex-1 bg-gray-100 p-4">
@@ -260,6 +261,7 @@ const ReservaForm = () => {
                     </tbody>
                 </table>
             </div>
+
         </>
     );
 };

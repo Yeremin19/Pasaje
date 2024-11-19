@@ -1,9 +1,9 @@
 "use client";
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Sidebar from '../components/sidebar'; // Ajusta la ruta si es necesario
 import { Bar, Doughnut, Line, Scatter } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
-import { getReservas } from '@/actions/reserva'
+import { getReservas } from '@/actions/reserva';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, ArcElement);
 
@@ -29,63 +29,78 @@ function Dashboard() {
     ],
   };
 
-  const lineData = {
-    labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
+  const lineDataDay = {
+    labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
     datasets: [
       {
-        label: 'Ingresos del Mes',
-        data: [5000, 7000, 8000, 6000, 9000],
+        label: 'Ingresos del Día',
+        data: [5000, 7000, 8000, 6000, 9000], // Cambiar estos datos según los ingresos por día
         borderColor: 'rgba(54, 162, 235, 1)',
         fill: false,
       },
     ],
   };
 
-  const scatterData = {
+  const lineDataWeek = {
+    labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
     datasets: [
       {
-        label: 'Distribución de Ingresos',
-        data: [
-          { x: 1, y: 1000 },
-          { x: 2, y: 2000 },
-          { x: 3, y: 1500 },
-          { x: 4, y: 3000 },
-          { x: 5, y: 2500 },
-        ],
-        backgroundColor: 'rgba(75, 192, 192, 1)',
+        label: 'Ingresos Semanales',
+        data: [35000, 42000, 38000, 45000], // Cambiar según los ingresos semanales
+        borderColor: 'rgba(75, 192, 192, 1)',
+        fill: false,
       },
     ],
   };
 
-  const [reservasTotalPrecio, setReservasTotalPrecio] = useState(0)
-  const [reservasTotal, setReservasTotal] = useState(0)
+  const lineDataMonth = {
+    labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
+    datasets: [
+      {
+        label: 'Ingresos Mensuales',
+        data: [20000, 22000, 25000, 23000, 27000], // Cambiar según los ingresos mensuales
+        borderColor: 'rgba(153, 102, 255, 1)',
+        fill: false,
+      },
+    ],
+  };
 
+  const lineDataYear = {
+    labels: ['2021', '2022', '2023', '2024'],
+    datasets: [
+      {
+        label: 'Ingresos Anuales',
+        data: [250000, 270000, 300000, 350000], // Cambiar según los ingresos anuales
+        borderColor: 'rgba(255, 159, 64, 1)',
+        fill: false,
+      },
+    ],
+  };
+
+  const [reservasTotalPrecio, setReservasTotalPrecio] = useState(0);
+  const [reservasTotal, setReservasTotal] = useState(0);
 
   useEffect(() => {
-
     const getReservasTotal = async () => {
-      const reservas: [{precio: string}] = await getReservas()
+      const reservas: [{ precio: string }] = await getReservas();
 
-      let totalPrecio: number = 0
-      let totalReservas = 0
+      let totalPrecio: number = 0;
+      let totalReservas = 0;
 
-      reservas.forEach( reserva => {
-            if (reserva.precio) {
-              //@ts-ignore
-              totalPrecio += Number(reserva.precio);
-            }
-            totalReservas += 1
-          }
-      )
+      reservas.forEach((reserva) => {
+        if (reserva.precio) {
+          //@ts-ignore
+          totalPrecio += Number(reserva.precio);
+        }
+        totalReservas += 1;
+      });
 
       // @ts-ignore
-      setReservasTotalPrecio(totalPrecio)
-      setReservasTotal(totalReservas)
+      setReservasTotalPrecio(totalPrecio);
+      setReservasTotal(totalReservas);
+    };
 
-    }
-
-    getReservasTotal()
-
+    getReservasTotal();
   }, []);
 
   return (
@@ -153,25 +168,27 @@ function Dashboard() {
 
           {/* Gráficos en la parte inferior */}
           <div className="grid grid-cols-2 gap-7 mt-8">
-          <div className="bg-white p-4 shadow-md rounded-lg">
-              <h3 className="text-lg font-semibold mb-4">Gráfico de Líneas</h3>
-              <Line data={lineData} />
-            </div>
             <div className="bg-white p-4 shadow-md rounded-lg">
-              <h3 className="text-lg font-semibold mb-4">Gráfico de Dispersión</h3>
-              <Scatter data={scatterData} />
-            </div>
-            <div className="bg-white p-4 shadow-md rounded-lg">
-              <h3 className="text-lg font-semibold mb-4">Gráfico de Barras</h3>
-              <Bar data={barData} />
-            </div>
-            <div className="bg-white p-4 shadow-md rounded-lg">
-              <h3 className="text-lg font-semibold mb-4">Gráfico Circular</h3>
-              <Doughnut data={doughnutData} />
+              <h3 className="text-lg font-semibold mb-4">Gráfico de Ingresos del Día</h3>
+              <Line data={lineDataDay} />
             </div>
 
+            <div className="bg-white p-4 shadow-md rounded-lg">
+              <h3 className="text-lg font-semibold mb-4">Gráfico de Ingresos Semanales</h3>
+              <Line data={lineDataWeek} />
+            </div>
+
+            <div className="bg-white p-4 shadow-md rounded-lg">
+              <h3 className="text-lg font-semibold mb-4">Gráfico de Ingresos Mensuales</h3>
+              <Line data={lineDataMonth} />
+            </div>
+
+            <div className="bg-white p-4 shadow-md rounded-lg">
+              <h3 className="text-lg font-semibold mb-4">Gráfico de Ingresos Anuales</h3>
+              <Line data={lineDataYear} />
+            </div>
           </div>
-        </div> s
+        </div>
       </main>
     </div>
   );
