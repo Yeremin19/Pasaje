@@ -1,7 +1,7 @@
 "use client";
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/sidebar'; // Ajusta la ruta si es necesario
-import { Bar, Doughnut, Line, Scatter } from 'react-chartjs-2';
+import {  Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 import { getReservas } from '@/actions/reserva';
 
