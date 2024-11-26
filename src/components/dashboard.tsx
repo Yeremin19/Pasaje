@@ -30,11 +30,11 @@ function Dashboard() {
   };
 
   const lineDataDay = {
-    labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
+    labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'],
     datasets: [
       {
         label: 'Ingresos del Día',
-        data: [5000, 7000, 8000, 6000, 9000], // Cambiar estos datos según los ingresos por día
+        data: [2856, 3320, 3750, 3000, 3550, 3610, 3695 ], // Cambiar estos datos según los ingresos por día
         borderColor: 'rgba(54, 162, 235, 1)',
         fill: false,
       },
@@ -46,7 +46,7 @@ function Dashboard() {
     datasets: [
       {
         label: 'Ingresos Semanales',
-        data: [35000, 42000, 38000, 45000], // Cambiar según los ingresos semanales
+        data: [25425, 24450, 26380, 27200], // Cambiar según los ingresos semanales
         borderColor: 'rgba(75, 192, 192, 1)',
         fill: false,
       },
@@ -54,11 +54,11 @@ function Dashboard() {
   };
 
   const lineDataMonth = {
-    labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
+    labels: ['Septiembre ', 'Octubre', 'Noviembre', 'Diciembre'],
     datasets: [
       {
         label: 'Ingresos Mensuales',
-        data: [20000, 22000, 25000, 23000, 27000], // Cambiar según los ingresos mensuales
+        data: [77300, 77523, 75444, 77012], // Cambiar según los ingresos mensuales
         borderColor: 'rgba(153, 102, 255, 1)',
         fill: false,
       },
@@ -70,7 +70,7 @@ function Dashboard() {
     datasets: [
       {
         label: 'Ingresos Anuales',
-        data: [250000, 270000, 300000, 350000], // Cambiar según los ingresos anuales
+        data: [230000, 218000, 223000, 240500], // Cambiar según los ingresos anuales
         borderColor: 'rgba(255, 159, 64, 1)',
         fill: false,
       },
@@ -108,7 +108,7 @@ function Dashboard() {
       <Sidebar />
 
       <main className="flex-1 p-0">
-        <div className="bg-cyan-800 text-white p-4 mb-6 shadow-md">
+        <div className="bg-red-500 text-white p-4 mb-6 shadow-md">
           <h1 className="text-3xl font-bold">Sistema de Venta de Pasajes</h1>
         </div>
 
@@ -131,7 +131,7 @@ function Dashboard() {
                   <img src="reporte.png" alt="Reportes" className="w-20 h-20 mx-auto" />
                 </div>
                 <h2 className="text-md font-semibold">Reportes</h2>
-                <p className="text-2xl font-bold">0</p>
+                <p className="text-2xl font-bold">23</p>
               </div>
             </div>
 
@@ -151,7 +151,7 @@ function Dashboard() {
                   <img src="rutas.png" alt="Rutas Populares" className="w-20 h-20 mx-auto" />
                 </div>
                 <h2 className="text-md font-semibold">Rutas Populares</h2>
-                <p className="text-2xl font-bold">7</p>
+                <p className="text-2xl font-bold">8</p>
               </div>
             </div>
 
@@ -160,7 +160,7 @@ function Dashboard() {
                 <div className="mb-2">
                   <img src="ingresos.png" alt="Ingresos del Día" className="w-20 h-20 mx-auto" />
                 </div>
-                <h2 className="text-md font-semibold">Ingresos del Día</h2>
+                <h2 className="text-md font-semibold">Ingresos</h2>
                 <p className="text-2xl font-bold">{reservasTotalPrecio}</p>
               </div>
             </div>
@@ -169,22 +169,22 @@ function Dashboard() {
           {/* Gráficos en la parte inferior */}
           <div className="grid grid-cols-2 gap-7 mt-8">
             <div className="bg-white p-4 shadow-md rounded-lg">
-              <h3 className="text-lg font-semibold mb-4">Gráfico de Ingresos del Día</h3>
+              <h3 className="text-lg font-semibold mb-4"> Predicción de Ingresos diarios</h3>
               <Line data={lineDataDay} />
             </div>
 
             <div className="bg-white p-4 shadow-md rounded-lg">
-              <h3 className="text-lg font-semibold mb-4">Gráfico de Ingresos Semanales</h3>
+              <h3 className="text-lg font-semibold mb-4">Predicción de Ingresos Semanales</h3>
               <Line data={lineDataWeek} />
             </div>
 
             <div className="bg-white p-4 shadow-md rounded-lg">
-              <h3 className="text-lg font-semibold mb-4">Gráfico de Ingresos Mensuales</h3>
+              <h3 className="text-lg font-semibold mb-4">Predicción de Ingresos Mensuales</h3>
               <Line data={lineDataMonth} />
             </div>
 
             <div className="bg-white p-4 shadow-md rounded-lg">
-              <h3 className="text-lg font-semibold mb-4">Gráfico de Ingresos Anuales</h3>
+              <h3 className="text-lg font-semibold mb-4">Predicción de Ingresos Anuales</h3>
               <Line data={lineDataYear} />
             </div>
           </div>

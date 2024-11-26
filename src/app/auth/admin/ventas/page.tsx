@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, Fragment } from 'react';
 import * as XLSX from 'xlsx';
 import { PasajesContext } from '@/context/PasajesContext';
 import Receipt from '../boleta/page';
@@ -77,11 +77,11 @@ const App = () => {
     return (
         <div className="flex">
             {/* Sidebar */}
-            <aside className="w-64 bg-green-600 text-white flex flex-col p-5 h-screen">
+            <aside className="flex flex-col bg-gradient-to-b from-red-500 to-black w-52 p-4 shadow-lg text-white">
                 <div className="flex flex-col items-center mb-8">
                     <div className="w-16 h-16 bg-gray-300 rounded-full mb-4 overflow-hidden">
                         <img
-                            src="/Imagen1.jpg"
+                            src="/loguito.jpeg"
                             alt="Profile"
                             className="w-full h-full object-cover"
                         />
@@ -89,51 +89,57 @@ const App = () => {
                     <h2 className="text-lg font-bold">EL RAPIDO</h2>
                 </div>
                 <nav className="space-y-4">
-                    <a href="/" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
-                        <span>🏠</span>
-                        <span>Dashboard</span>
-                    </a>
-                    <a href="/auth/admin/bus" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
-                        <span>🚌</span>
-                        <span>Buses</span>
-                    </a>
-                    <a href="/auth/admin/usuario" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
-                        <span>🎫</span>
-                        <span>Pasajes</span>
-                    </a>
-                    <a href="/auth/admin/ventas" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
-                        <span>💼</span>
-                        <span>Ventas</span>
-                    </a>
-                    <a href="/auth/admin/reporte" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
-                        <span>📝</span>
-                        <span>Reportes</span>
-                    </a>
-                    <div>
-                        <div className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded cursor-pointer" onClick={() => setIsConfigOpen(!isConfigOpen)}>
-                            <span>⚙️</span>
-                            <span>Configuraciónㅤㅤㅤ✛</span>
-                        </div>
-                        {isConfigOpen && (
-                            <div className="ml-6 mt-2 space-y-2">
-                                <a href="/auth/admin/informacion" className="block text-teal-300 hover:underline">Información de la Empresa</a>
-                            </div>
-                        )}
-                    </div>
-                </nav>
-                <button className="mt-auto bg-red-600 hover:bg-red-700 p-2 rounded justify-center">
-                    Cerrar sesión
-                </button>
+        <a href="/" className="flex items-center space-x-2  hover:bg-red-900 p-2 border-2 rounded">
+          <span>🏠</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="/auth/admin/bus" className="flex items-center space-x-2 hover:bg-red-800 p-2 border-2  rounded">
+          <span>🚌</span>
+          <span>Buses</span>
+        </a>
+        <a href="/auth/admin/usuario" className="flex items-center space-x-2  hover:bg-red-800 p-2 border-2  rounded">
+          <span>🎫</span>
+          <span>Pasajes</span>
+        </a>
+        <a href="/auth/admin/ventas" className="flex items-center space-x-2  hover:bg-red-800 p-2 border-2  rounded">
+          <span>💼</span>
+          <span>Ventas</span>
+        </a>
+        <a href="/auth/admin/reporte" className="flex items-center space-x-2  hover:bg-red-800 p-2 border-2  rounded">
+          <span>📝</span>
+          <span>Reportes</span>
+        </a>
+
+        {/* Menú de Configuración */}
+        <div>
+          <div 
+            className="flex items-center space-x-2  hover:bg-red-800 p-2  border-2 rounded cursor-pointer"
+            onClick={() => setIsConfigOpen(!isConfigOpen)}  // Cambia el estado para abrir/cerrar el submenú
+          >
+            <span>⚙️</span>
+            <span>Configuración ✛</span>
+          </div>
+          {isConfigOpen && (  // Si el submenú está abierto, lo mostramos
+            <div className="ml-6 mt-2 space-y-2">
+              <a href="/auth/admin/informacion" className="block text-teal-300 hover:underline">
+                Información de la Empresa
+              </a>
+            </div>
+          )}
+        </div>
+      </nav>
+                <button className="mt-auto bg-red-600 hover:bg-red-700 p-2 rounded text-center">
+      <a href="/login" className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 p-2 rounded">
+          <span>ㅤ Cerrar Sesión</span>
+        </a>
+      </button>
             </aside>
 
             {/* Main content */}
             <div className="flex-1 bg-gray-100 p-6">
                 {/* Componente de boleta oculto */}
-                <div id="receipt" className="hidden">
-                    <Receipt />
-                </div>
                 {/* Header */}
-                <div className="bg-cyan-800 text-white p-4 shadow-md fixed top-0 z-50 w-full" style={{ margin: 0, left: '256px' }}>
+                <div className="bg-red-500 text-white p-4 shadow-md fixed top-0 z-50 w-full" style={{ margin: 0, right: '-208px' }}>
                     <h1 className="text-3xl font-bold">Sistema de Venta de Pasajes</h1>
                 </div>
                 <div className="mt-20">
@@ -141,7 +147,7 @@ const App = () => {
                     <div className="flex justify-between items-center mb-4">
                         <h1 className="text-2xl font-bold">Confirmación de Compra</h1>
                         <button 
-                            onClick={() => window.location.href = '/auth/admin/pasajes'}
+                            onClick={() => window.location.href = '/auth/admin/reserva'}
                             className="bg-green-600 hover:bg-green-700 text-white py-2 px-8 rounded">
                             Nueva Compra
                         </button>
@@ -154,34 +160,39 @@ const App = () => {
                                 <th className="border border-gray-300 p-2">Hora</th>
                                 <th className="border border-gray-300 p-2">Nombre</th>
                                 <th className="border border-gray-300 p-2">Documento</th>
-                                <th className="border border-gray-300 p-2">N° Pasaje</th>
+                                <th className="border border-gray-300 p-2">N° Asiento</th>
                                 <th className="border border-gray-300 p-2">Precio del pasaje</th>
                                 <th className="border border-gray-300 p-2">Imprimir</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {Array.isArray(uniqueReserve) && uniqueReserve.length > 0 ? (
-                                uniqueReserve.map((reserva: any) => (
-                                    <tr key={reserva.reserva_id}>
-                                        <td className="border border-gray-300 p-2">{reserva.reserva_id}</td>
-                                        <td className="border border-gray-300 p-2">{new Date(reserva.fecha_reserva).toLocaleDateString()}</td>
-                                        <td className="border border-gray-300 p-2">{new Date(reserva.horario?.hora_salida).toLocaleTimeString()}</td>
-                                        <td className="border border-gray-300 p-2">{reserva.usuario?.nombre} {reserva.usuario?.apellido}</td>
-                                        <td className="border border-gray-300 p-2">{reserva.usuario?.dni}</td>
-                                        <td className="border border-gray-300 p-2">{reserva.asiento?.numero_asiento}</td>
-                                        <td className="border border-gray-300 p-2">{reserva.precio}</td>
-                                        <td className="border border-gray-300 p-2 text-center">
-                                            <button onClick={printReceipt} className="bg-gray-300 p-2 rounded hover:bg-gray-400">
-                                                🖨️
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
+                        {Array.isArray(uniqueReserve) && uniqueReserve.length > 0 ? (
+                            uniqueReserve.map((reserva: any) => (
+                            <Fragment key={reserva.reserva_id}>
                                 <tr>
-                                    <td colSpan={8} className="border border-gray-300 p-2 text-center">No hay datos disponibles</td>
+                                <td colSpan={8} id='receipt' className="hidden">
+                                    <Receipt name={reserva.usuario?.nombre} apellido={reserva.usuario?.apellido} fecha={new Date(reserva.fecha_reserva).toLocaleDateString()} hora={new Date(reserva.horario?.hora_salida).toLocaleTimeString()} dni={reserva.usuario?.dni} asiento={reserva.asiento?.numero_asiento} precio={reserva.precio}/>
+                                </td>
+                                <td className="border border-gray-300 p-2">{reserva.reserva_id}</td>
+                                <td className="border border-gray-300 p-2">{new Date(reserva.fecha_reserva).toLocaleDateString()}</td>
+                                <td className="border border-gray-300 p-2">{new Date(reserva.horario?.hora_salida).toLocaleTimeString()}</td>
+                                <td className="border border-gray-300 p-2">{reserva.usuario?.nombre} {reserva.usuario?.apellido}</td>
+                                <td className="border border-gray-300 p-2">{reserva.usuario?.dni}</td>
+                                <td className="border border-gray-300 p-2">{reserva.asiento?.numero_asiento}</td>
+                                <td className="border border-gray-300 p-2">{reserva.precio}</td>
+                                <td className="border border-gray-300 p-2 text-center">
+                                    <button onClick={printReceipt} className="bg-gray-300 p-2 rounded hover:bg-gray-400">
+                                    🖨️
+                                    </button>
+                                </td>
                                 </tr>
-                            )}
+                            </Fragment>
+                            ))
+                        ) : (
+                            <tr>
+                            <td colSpan={8} className="border border-gray-300 p-2 text-center">No hay datos disponibles</td>
+                            </tr>
+                        )}
                         </tbody>
                     </table>
 
@@ -206,7 +217,7 @@ const App = () => {
                                 <th className="border border-gray-300 p-2">Hora</th>
                                 <th className="border border-gray-300 p-2">Nombre</th>
                                 <th className="border border-gray-300 p-2">Documento</th>
-                                <th className="border border-gray-300 p-2">N° Pasaje</th>
+                                <th className="border border-gray-300 p-2">N° Asiento</th>
                                 <th className="border border-gray-300 p-2">Precio del pasaje</th>
                             </tr>
                         </thead>

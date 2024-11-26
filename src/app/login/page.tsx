@@ -29,7 +29,7 @@ function Login() {
                             onChange={(e) => setCorreo(e.target.value)}
                             value={correo}
                             type="email"
-                            placeholder="Email ID"
+                            placeholder="Email"
                             className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
@@ -40,11 +40,11 @@ function Login() {
                             onChange={(e) => setPassword(e.target.value)}
                             value={password}
                             type="password"
-                            placeholder="Password"
+                            placeholder="contraseña"
                             className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
-                    <input type={"submit"} placeholder={"Login"} className="mx-auto w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"/>
+                    <input type={"submit"} value={"Iniciar Sesión"} className="mx-auto w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"/>
                 </form>
             </div>
         </div>

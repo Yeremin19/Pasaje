@@ -16,7 +16,7 @@ const App = () => {
     return (
         <div className="flex">
             {/* Sidebar */}
-            <aside className="w-64 bg-green-600 text-white flex flex-col p-5">
+            <aside className="flex flex-col bg-gradient-to-b from-red-500 to-black w-52 p-4 shadow-lg text-white">
                 <div className="flex flex-col items-center mb-8">
                     <div className="w-16 h-16 bg-gray-300 rounded-full mb-4 overflow-hidden">
                         <img
@@ -27,49 +27,58 @@ const App = () => {
                     </div>
                     <h2 className="text-lg font-bold">EL RAPIDO</h2>
                 </div>
-                <nav className="space-y-4 h-screen w-full">
-                    <a href="/" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
-                        <span>🏠</span>
-                        <span>Dashboard</span>
-                    </a>
-                    <a href="/auth/admin/bus" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
-                        <span>🚌</span>
-                        <span>Buses</span>
-                    </a>
-                    <a href="/auth/admin/usuario" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
-                        <span>🎫</span>
-                        <span>Pasajes</span>
-                    </a>
-                    <a href="/auth/admin/ventas" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
-                        <span>💼</span>
-                        <span>Ventas</span>
-                    </a>
-                    <a href="/auth/admin/reporte" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
-                        <span>📝</span>
-                        <span>Reportes</span>
-                    </a>
-                    <div>
-                        <div className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded cursor-pointer" onClick={() => setIsConfigOpen(!isConfigOpen)}>
-                            <span>⚙️</span>
-                            <span>Configuraciónㅤㅤㅤ✛</span>
-                        </div>
-                        {isConfigOpen && (
-                            <div className="ml-6 mt-2 space-y-2">
-                                <a href="/auth/admin/informacion" className="block text-teal-300 hover:underline">Información de la Empresa</a>
-                            </div>
-                        )}
-                    </div>
-                </nav>
-                <button className="mt-auto bg-red-600 hover:bg-red-700 p-2 rounded justify-center">
-                    Cerrar sesión
-                </button>
+                    <nav className="space-y-4">
+            <a href="/" className="flex items-center space-x-2  hover:bg-red-900 p-2 border-2 rounded">
+            <span>🏠</span>
+            <span>Dashboard</span>
+            </a>
+            <a href="/auth/admin/bus" className="flex items-center space-x-2 hover:bg-red-800 p-2 border-2  rounded">
+            <span>🚌</span>
+            <span>Buses</span>
+            </a>
+            <a href="/auth/admin/usuario" className="flex items-center space-x-2  hover:bg-red-800 p-2 border-2  rounded">
+            <span>🎫</span>
+            <span>Pasajes</span>
+            </a>
+            <a href="/auth/admin/ventas" className="flex items-center space-x-2  hover:bg-red-800 p-2 border-2  rounded">
+            <span>💼</span>
+            <span>Ventas</span>
+            </a>
+            <a href="/auth/admin/reporte" className="flex items-center space-x-2  hover:bg-red-800 p-2 border-2  rounded">
+            <span>📝</span>
+            <span>Reportes</span>
+            </a>
+
+            {/* Menú de Configuración */}
+            <div>
+            <div 
+                className="flex items-center space-x-2  hover:bg-red-800 p-2  border-2 rounded cursor-pointer"
+                onClick={() => setIsConfigOpen(!isConfigOpen)}  // Cambia el estado para abrir/cerrar el submenú
+            >
+                <span>⚙️</span>
+                <span>Configuración ✛</span>
+            </div>
+            {isConfigOpen && (  // Si el submenú está abierto, lo mostramos
+                <div className="ml-6 mt-2 space-y-2">
+                <a href="/auth/admin/informacion" className="block text-teal-300 hover:underline">
+                    Información de la Empresa
+                </a>
+                </div>
+            )}
+            </div>
+        </nav>
+                <button className="mt-auto bg-red-600 hover:bg-red-700 p-2 rounded text-center">
+      <a href="/login" className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 p-2 rounded">
+          <span>ㅤㅤCerrar Sesión</span>
+        </a>
+      </button>
             </aside>
             
 
             {/* Main content */}
             <div className="flex-1 bg-gray-100 p-4">
                 {/* Header */}
-                <div className="bg-cyan-800 text-white p-4 shadow-md fixed top-0 z-50 w-full" style={{ margin: 0, left: '256px' }}>
+                <div className="bg-red-500 text-white p-4 shadow-md fixed top-0 z-50 w-full" style={{ margin: 0, right: '-208px' }}>
                     <h1 className="text-3xl font-bold">Sistema de Venta de Pasajes</h1>
                 </div>
 
@@ -204,7 +213,7 @@ const ReservaForm = () => {
                     </select>
                 </div>
                 <div className="mb-4">
-                    <label className="block font-semibold">Usuario</label>
+                    <label className="block font-semibold">Cliente</label>
                     <select value={usuario_id} onChange={(e) => setUsuarioId(Number(e.target.value))} className="w-full border rounded p-2">
                         <option>Seleccionar Usuario</option>
                         {usuarios.map((usuario) => (
@@ -225,43 +234,13 @@ const ReservaForm = () => {
                         ))}
                     </select>
                 </div>
-                <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
+                <button 
+                onClick={() => window.location.href = '/auth/admin/ventas'}
+                type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
+                    
                     Crear Pasaje
                 </button>
             </form>
-
-            <div className="mt-8">
-                <h2 className="text-2xl font-bold mb-4">Lista de Pasajes</h2>
-                <table className="min-w-full bg-white border border-gray-300">
-                    <thead>
-                        <tr>
-                            <th className="py-2 px-4 border-b">Estado</th>
-                            <th className="py-2 px-4 border-b">Fecha de Compra</th>
-                            <th className="py-2 px-4 border-b">Usuario</th>
-                            <th className="py-2 px-4 border-b">Horario</th>
-                            <th className="py-2 px-4 border-b">Asiento</th>
-                            <th className="py-2 px-4 border-b">Precio</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {reservas.map((reserva: any) => (
-                            <tr key={reserva.reserva_id}>
-                                <td className="py-2 px-4 border-b">{reserva.estado}</td>
-                                <td className="py-2 px-4 border-b">{new Date(reserva.fecha_reserva).toLocaleDateString()}</td>
-                                <td className="py-2 px-4 border-b">{reserva.usuario?.nombre} {reserva.usuario?.apellido}</td>
-                                <td className="py-2 px-4 border-b">
-                                    {new Date(reserva.horario?.fecha).toLocaleDateString()} - {new Date(reserva.horario?.hora_salida).toLocaleTimeString()}
-                                </td>
-                                <td className="py-2 px-4 border-b">
-                                    {reserva.asiento?.numero_asiento} - {reserva.asiento?.tipo}
-                                </td>
-                                <td className="py-2 px-4 border-b">{reserva.precio}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-
         </>
     );
 };

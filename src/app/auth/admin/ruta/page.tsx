@@ -45,11 +45,11 @@ function RutaPage() {
     return (
         <div className='flex min-h-screen'>
             {/* Sidebar */}
-            <aside className="w-64 bg-green-600 text-white flex flex-col p-5 h-screen">
+            <aside className="flex flex-col bg-gradient-to-b from-red-500 to-black w-52 p-4 shadow-lg text-white">
                 <div className="flex flex-col items-center mb-8">
                     <div className="w-16 h-16 bg-gray-300 rounded-full mb-4 overflow-hidden">
                         <img
-                            src="/Imagen1.jpg"
+                            src="/loguito.jpeg"
                             alt="Profile"
                             className="w-full h-full object-cover"
                         />
@@ -57,46 +57,55 @@ function RutaPage() {
                     <h2 className="text-lg font-bold">EL RAPIDO</h2>
                 </div>
                 <nav className="space-y-4">
-                    <a href="/" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
-                        <span>🏠</span>
-                        <span>Dashboard</span>
-                    </a>
-                    <a href="/auth/admin/bus" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
-                        <span>🚌</span>
-                        <span>Buses</span>
-                    </a>
-                    <a href="/auth/admin/usuario" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
-                        <span>🎫</span>
-                        <span>Pasajes</span>
-                    </a>
-                    <a href="/auth/admin/ventas" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
-                        <span>💼</span>
-                        <span>Ventas</span>
-                    </a>
-                    <a href="/auth/admin/reporte" className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded">
-                        <span>📝</span>
-                        <span>Reportes</span>
-                    </a>
-                    <div>
-                        <div className="flex items-center space-x-2 bg-green-700 hover:bg-green-800 p-2 rounded cursor-pointer" onClick={() => setIsConfigOpen(!isConfigOpen)}>
-                            <span>⚙️</span>
-                            <span>Configuraciónㅤㅤㅤ✛</span>
-                        </div>
-                        {isConfigOpen && (
-                            <div className="ml-6 mt-2 space-y-2">
-                                <a href="/auth/admin/informacion" className="block text-teal-300 hover:underline">Información de la Empresa</a>
-                            </div>
-                        )}
-                    </div>
-                </nav>
-                <button className="mt-auto bg-red-600 hover:bg-red-700 p-2 rounded justify-center">
-                    Cerrar sesión
-                </button>
+        <a href="/" className="flex items-center space-x-2  hover:bg-red-900 p-2 border-2 rounded">
+          <span>🏠</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="/auth/admin/bus" className="flex items-center space-x-2 hover:bg-red-800 p-2 border-2  rounded">
+          <span>🚌</span>
+          <span>Buses</span>
+        </a>
+        <a href="/auth/admin/usuario" className="flex items-center space-x-2  hover:bg-red-800 p-2 border-2  rounded">
+          <span>🎫</span>
+          <span>Pasajes</span>
+        </a>
+        <a href="/auth/admin/ventas" className="flex items-center space-x-2  hover:bg-red-800 p-2 border-2  rounded">
+          <span>💼</span>
+          <span>Ventas</span>
+        </a>
+        <a href="/auth/admin/reporte" className="flex items-center space-x-2  hover:bg-red-800 p-2 border-2  rounded">
+          <span>📝</span>
+          <span>Reportes</span>
+        </a>
+
+        {/* Menú de Configuración */}
+        <div>
+          <div 
+            className="flex items-center space-x-2  hover:bg-red-800 p-2  border-2 rounded cursor-pointer"
+            onClick={() => setIsConfigOpen(!isConfigOpen)}  // Cambia el estado para abrir/cerrar el submenú
+          >
+            <span>⚙️</span>
+            <span>Configuración ✛</span>
+          </div>
+          {isConfigOpen && (  // Si el submenú está abierto, lo mostramos
+            <div className="ml-6 mt-2 space-y-2">
+              <a href="/auth/admin/informacion" className="block text-teal-300 hover:underline">
+                Información de la Empresa
+              </a>
+            </div>
+          )}
+        </div>
+      </nav>
+                <button className="mt-auto bg-red-600 hover:bg-red-700 p-2 rounded text-center">
+      <a href="/login" className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 p-2 rounded">
+          <span>ㅤㅤCerrar Sesión</span>
+        </a>
+      </button>
             </aside>
 
             <div className='flex-1'>
                 {/* Encabezado flexible */}
-                <div className="bg-cyan-800 text-white p-4 shadow-md sticky top-0 z-10 w-full">
+                <div className="bg-red-500 text-white p-4 shadow-md sticky top-0 z-10 w-full">
                     <h1 className="text-3xl font-bold">Sistema de Venta de Pasajes</h1>
                 </div>
                 <div className='p-4 container mx-auto'>

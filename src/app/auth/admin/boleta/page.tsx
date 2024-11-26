@@ -1,8 +1,18 @@
 "use client";
 
-import React from 'react';
+interface Props {
+    name: string | undefined
+    apellido: string | undefined
+    fecha: string | undefined
+    hora: string | undefined
+    dni: string | undefined
+    asiento: string | undefined
+    precio: string | undefined
 
-const Receipt = () => {
+}
+
+const Receipt = ({name, apellido, fecha, hora, dni, asiento, precio}: Props) => {
+
     return (
         <div className="max-w-sm mx-auto bg-white shadow-lg border border-gray-300 p-4 text-sm font-sans">
             <div className="text-center mb-4">
@@ -23,7 +33,7 @@ const Receipt = () => {
                         </tr>
                         <tr>
                             <td>APELLIDOS Y NOMBRES:</td>
-                            <td className="text-right">ARTURO FELIPE TOLEDO JARA</td>
+                            <td className="text-right">{name} {apellido}</td>
                         </tr>
                         <tr>
                             <td>TIPO DE DOCUMENTO:</td>
@@ -31,7 +41,7 @@ const Receipt = () => {
                         </tr>
                         <tr>
                             <td>NÚMERO DE DOCUMENTO:</td>
-                            <td className="text-right">31680030</td>
+                            <td className="text-right">{dni}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -46,11 +56,11 @@ const Receipt = () => {
                         </tr>
                         <tr>
                             <td>DÍA Y HORA DE VIAJE:</td>
-                            <td className="text-right">28/10/2024 04:40 AM</td>
+                            <td className="text-right">{fecha} {hora}</td>
                         </tr>
                         <tr>
                             <td>NÚMERO DE ASIENTO:</td>
-                            <td className="text-right">11</td>
+                            <td className="text-right">{asiento}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -77,7 +87,7 @@ const Receipt = () => {
                         </tr>
                         <tr>
                             <td>TOTAL EXONERADO:</td>
-                            <td className="text-right">15.00</td>
+                            <td className="text-right">{precio}</td>
                         </tr>
                         <tr>
                             <td>TOTAL DESCUENTO:</td>
@@ -89,7 +99,7 @@ const Receipt = () => {
                         </tr>
                         <tr>
                             <td><strong>IMPORTE TOTAL:</strong></td>
-                            <td className="text-right font-bold">15.00</td>
+                            <td className="text-right font-bold">{precio}</td>
                         </tr>
                     </tbody>
                 </table>
